@@ -53,7 +53,7 @@ const music_list = [
     },
     {
         img : 'https://i.ytimg.com/vi/7p4EW7RIcl4/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCRlyAFnujhCB0qIYzrHIB4uI7Row',
-        name : 'Rather Be',
+        name : 'Waheguru',
         artist : 'Shekhar Ravjiani, Ajay Bijli',
         music : 'music/waheguru.mp3'
     },
