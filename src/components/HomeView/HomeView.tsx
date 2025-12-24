@@ -34,18 +34,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
       </section>
 
       <section className="mb-14">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8 max-sm:mb-5">
           <div>
-            <h2 className="text-4xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-2 max-md:text-2xl">
+            <h2 className="text-4xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-2 max-lg:text-3xl max-md:text-xl max-sm:text-lg max-sm:mb-1.5">
               Featured Tracks
             </h2>
             <div className="h-1.5 w-24 bg-gradient-to-r from-primary to-purple-600 rounded-full shadow-lg shadow-primary/50 max-sm:h-1 max-sm:w-16"></div>
           </div>
-          <button className="px-5 py-2.5 bg-transparent border border-white/20 rounded-xl text-white/70 text-sm font-bold cursor-pointer transition-all duration-300 hover:text-white hover:bg-white/10 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 active:scale-95">
+          <button className="px-5 py-2.5 bg-transparent border border-white/20 rounded-xl text-white/70 text-sm font-bold cursor-pointer transition-all duration-300 hover:text-white hover:bg-white/10 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 active:scale-95 max-sm:px-3 max-sm:py-2 max-sm:text-xs max-sm:rounded-lg">
             See All
           </button>
         </div>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6 xl:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] max-md:grid-cols-2 max-md:gap-4">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6 xl:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] sm:grid-cols-2 max-sm:grid-cols-1 max-md:gap-4 max-sm:gap-3">
           {featuredTracks.map((track, index) => (
             <TrackCard
               key={track.id}
@@ -60,18 +60,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
       </section>
 
       <section className="mb-14">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8 max-sm:mb-5">
           <div>
-            <h2 className="text-4xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-2 max-md:text-2xl">
+            <h2 className="text-4xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-2 max-lg:text-3xl max-md:text-xl max-sm:text-lg max-sm:mb-1.5">
               More Tracks
             </h2>
-            <div className="h-1.5 w-24 bg-gradient-to-r from-purple-600 to-primary rounded-full shadow-lg shadow-purple-500/50"></div>
+            <div className="h-1.5 w-24 bg-gradient-to-r from-purple-600 to-primary rounded-full shadow-lg shadow-purple-500/50 max-sm:h-1 max-sm:w-16"></div>
           </div>
-          <button className="px-5 py-2.5 bg-transparent border border-white/20 rounded-xl text-white/70 text-sm font-bold cursor-pointer transition-all duration-300 hover:text-white hover:bg-white/10 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 active:scale-95">
+          <button className="px-5 py-2.5 bg-transparent border border-white/20 rounded-xl text-white/70 text-sm font-bold cursor-pointer transition-all duration-300 hover:text-white hover:bg-white/10 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 active:scale-95 max-sm:px-3 max-sm:py-2 max-sm:text-xs max-sm:rounded-lg">
             See All
           </button>
         </div>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6 xl:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] max-md:grid-cols-2 max-md:gap-4">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6 xl:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] sm:grid-cols-2 max-sm:grid-cols-1 max-md:gap-4 max-sm:gap-3">
           {recentTracks.map((track, index) => {
             const actualIndex = index + 6;
             return (
@@ -90,15 +90,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       {tracks.length > 12 && (
         <section className="mb-14">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-8 max-sm:mb-5">
             <div>
-              <h2 className="text-4xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-2 max-md:text-2xl">
+              <h2 className="text-4xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-2 max-lg:text-3xl max-md:text-xl max-sm:text-lg max-sm:mb-1.5">
                 All Songs
               </h2>
-              <div className="h-1.5 w-24 bg-gradient-to-r from-primary via-purple-500 to-primary-dark rounded-full shadow-lg shadow-primary/50"></div>
+              <div className="h-1.5 w-24 bg-gradient-to-r from-primary via-purple-500 to-primary-dark rounded-full shadow-lg shadow-primary/50 max-sm:h-1 max-sm:w-16"></div>
             </div>
           </div>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6 xl:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] max-md:grid-cols-2 max-md:gap-4">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6 xl:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] sm:grid-cols-2 max-sm:grid-cols-1 max-md:gap-4 max-sm:gap-3">
             {tracks.slice(12).map((track, index) => {
               const actualIndex = index + 12;
               return (
