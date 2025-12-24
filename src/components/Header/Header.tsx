@@ -25,20 +25,26 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onMenuClick }) => {
         >
           <Menu size={24} className="max-sm:w-5 max-sm:h-5" />
         </button>
-        
+        {/* App Logo - bigger, plain */}
+        <img
+          src="/mm-logo.png"
+          alt="Music Maniac Logo"
+          className="h-16 w-16 object-contain max-md:h-12 max-md:w-12 max-sm:h-9 max-sm:w-9 max-[400px]:h-7 max-[400px]:w-7"
+          style={{ marginRight: '0.5rem', maxWidth: '100%', height: 'auto' }}
+        />
         <div className="relative flex-1 max-w-[500px] max-md:max-w-full max-md:w-full group">
-        <Search 
-          size={20} 
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none transition-all duration-300 group-focus-within:text-primary group-focus-within:scale-110 max-md:left-3.5 max-sm:w-4 max-sm:h-4 max-sm:left-3" 
-        />
-        <input
-          type="text"
-          placeholder="Search for songs, artists..."
-          value={searchQuery}
-          onChange={handleSearch}
-          className="w-full py-4 pl-12 pr-4 glass-premium border border-white/10 rounded-2xl text-white text-[15px] outline-none transition-all duration-300 placeholder:text-white/40 focus:border-primary/50 focus:shadow-[0_0_25px_rgba(147,51,234,0.25)] focus:bg-white/10 hover:bg-white/5 max-md:py-3 max-md:pl-11 max-md:pr-3.5 max-md:rounded-xl max-sm:py-2.5 max-sm:pl-9 max-sm:pr-3 max-sm:text-sm"
-        />
-      </div>
+          <Search 
+            size={20} 
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none transition-all duration-300 group-focus-within:text-primary group-focus-within:scale-110 max-md:left-3.5 max-sm:w-4 max-sm:h-4 max-sm:left-3" 
+          />
+          <input
+            type="text"
+            placeholder="Search for songs, artists..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="w-full py-4 pl-12 pr-4 glass-premium border border-white/10 rounded-2xl text-white text-[15px] outline-none transition-all duration-300 placeholder:text-white/40 focus:border-primary/50 focus:shadow-[0_0_25px_rgba(147,51,234,0.25)] focus:bg-white/10 hover:bg-white/5 max-md:py-3 max-md:pl-11 max-md:pr-3.5 max-md:rounded-xl max-sm:py-2.5 max-sm:pl-9 max-sm:pr-3 max-sm:text-sm"
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-4 max-md:w-full max-md:justify-end max-sm:gap-3">

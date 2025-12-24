@@ -25,18 +25,27 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, isOp
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={onClose}
+        aria-hidden="true"
       />
       
-      <aside className={`w-[280px] h-screen glass-dark flex flex-col border-r border-white/5 fixed left-0 top-0 z-[200] lg:w-[280px] md:w-[240px] backdrop-blur-2xl shadow-2xl transition-transform duration-300 ease-out ${
-        isOpen ? 'translate-x-0' : 'max-lg:-translate-x-full'
-      }`}>
+      <aside 
+        className={`w-[280px] h-screen glass-dark flex flex-col border-r border-white/5 fixed left-0 top-0 z-[200] lg:w-[280px] md:w-[240px] backdrop-blur-2xl shadow-2xl transition-transform duration-300 ease-out ${
+          isOpen ? 'translate-x-0' : 'max-lg:-translate-x-full'
+        }`}
+        role="navigation"
+        aria-label="Main navigation sidebar"
+      >
       <div className="p-8 md:p-6 flex items-center gap-4 border-b border-white/5 bg-gradient-to-br from-white/5 to-transparent justify-between">
         <div className="flex items-center gap-4">
-          <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary via-primary-dark to-purple-600 shadow-lg shadow-primary/30 animate-pulse-slow">
-            <Music size={28} className="text-white" />
-          </div>
+          {/* App Logo - bigger, plain */}
+          <img
+            src="/mm-logo.png"
+            alt="Music Maniac Logo"
+            className="h-16 w-16 object-contain max-sm:h-12 max-sm:w-12"
+            style={{ marginRight: '0.75rem' }}
+          />
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-purple-400 to-primary-dark bg-clip-text text-transparent">
-            Music Player
+            Music Maniac
           </h1>
         </div>
         <button
