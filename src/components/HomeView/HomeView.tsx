@@ -19,15 +19,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const recentTracks = tracks.slice(6, 12);
 
   return (
-    <div className="p-8 max-w-[1600px] mx-auto max-md:p-4 pb-32">
-      <section className="mb-12 p-12 bg-gradient-to-br from-primary/30 via-purple-600/20 to-primary-dark/30 rounded-3xl backdrop-blur-xl border border-white/10 max-md:p-8 max-md:mb-8 shadow-[0_20px_60px_rgba(147,51,234,0.3)] relative overflow-hidden">
+    <div className="p-8 max-w-[1600px] mx-auto max-lg:p-6 max-md:p-4 max-sm:p-3 pb-32 max-sm:pb-24">
+      <section className="mb-12 p-12 bg-gradient-to-br from-primary/30 via-purple-600/20 to-primary-dark/30 rounded-3xl backdrop-blur-xl border border-white/10 max-lg:p-10 max-md:p-6 max-sm:p-5 max-md:mb-8 max-sm:mb-6 max-sm:rounded-2xl shadow-[0_20px_60px_rgba(147,51,234,0.3)] relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse-slow"></div>
         <div className="relative text-center z-10">
-          <h1 className="text-6xl font-black mb-5 bg-gradient-to-br from-white via-purple-200 to-primary bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(147,51,234,0.4)] max-md:text-4xl animate-fade-in">
+          <h1 className="text-6xl font-black mb-5 bg-gradient-to-br from-white via-purple-200 to-primary bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(147,51,234,0.4)] max-lg:text-5xl max-md:text-3xl max-sm:text-2xl max-sm:mb-3 animate-fade-in">
             Welcome to Your Music
           </h1>
-          <p className="text-xl text-white/70 font-medium max-md:text-base">
+          <p className="text-xl text-white/70 font-medium max-lg:text-lg max-md:text-base max-sm:text-sm">
             Discover and play your favorite tracks
           </p>
         </div>
@@ -39,7 +39,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <h2 className="text-4xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-2 max-md:text-2xl">
               Featured Tracks
             </h2>
-            <div className="h-1.5 w-24 bg-gradient-to-r from-primary to-purple-600 rounded-full shadow-lg shadow-primary/50"></div>
+            <div className="h-1.5 w-24 bg-gradient-to-r from-primary to-purple-600 rounded-full shadow-lg shadow-primary/50 max-sm:h-1 max-sm:w-16"></div>
           </div>
           <button className="px-5 py-2.5 bg-transparent border border-white/20 rounded-xl text-white/70 text-sm font-bold cursor-pointer transition-all duration-300 hover:text-white hover:bg-white/10 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 active:scale-95">
             See All
