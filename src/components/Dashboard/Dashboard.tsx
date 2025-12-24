@@ -8,6 +8,7 @@ import { NowPlayingBar } from '@/components/NowPlayingBar/NowPlayingBar';
 export const Dashboard: React.FC = () => {
   const [activeView, setActiveView] = useState('home');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const { playerState, playlistState, currentTrack, audioControls } = useMusicPlayer();
 
@@ -20,7 +21,7 @@ export const Dashboard: React.FC = () => {
     : playlistState.tracks;
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_10%_20%,rgba(102,126,234,0.15)_0%,transparent_50%),radial-gradient(circle_at_90%_80%,rgba(118,75,162,0.15)_0%,transparent_50%)] before:pointer-events-none before:animate-[gradient-shift_20s_ease-in-out_infinite] max-lg:flex-col">
+    <div className="flex min-h-screen bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] relative overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_10%_20%,rgba(102,126,234,0.15)_0%,transparent_50%),radial-gradient(circle_at_90%_80%,rgba(118,75,162,0.15)_0%,transparent_50%)] before:pointer-events-none before:animate-[gradient-shift_20s_ease-in-out_infinite]">
       <style>{`
         @keyframes gradient-shift {
           0%, 100% { opacity: 1; }
@@ -28,10 +29,18 @@ export const Dashboard: React.FC = () => {
         }
       `}</style>
       
-      <Sidebar activeView={activeView} onViewChange={setActiveView} />
+      <Sidebar 
+        activeView={activeView} 
+        onViewChange={(view) => {
+          setActiveView(view);
+          setIsSidebarOpen(false);
+        }} 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
       
       <main className="flex-1 ml-[280px] flex flex-col relative z-[1] lg:ml-[280px] md:ml-[240px] max-lg:ml-0">
-        <Header onSearch={setSearchQuery} />
+        <Header onSearch={setSearchQuery} onMenuClick={() => setIsSidebarOpen(true)} />
         
         <div className="flex-1 overflow-y-auto pb-[120px] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-primary/50 hover:scrollbar-thumb-primary/70 max-lg:pb-[200px] max-sm:pb-[220px]">
           <style>{`

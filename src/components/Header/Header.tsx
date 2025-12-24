@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Search, User } from 'lucide-react';
+import { Search, User, Menu } from 'lucide-react';
 
 interface HeaderProps {
   onSearch?: (query: string) => void;
+  onMenuClick?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
+export const Header: React.FC<HeaderProps> = ({ onSearch, onMenuClick }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +17,16 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
 
   return (
     <header className="flex items-center justify-between px-8 py-6 bg-gradient-to-br from-black/40 via-black/20 to-transparent backdrop-blur-2xl border-b border-white/5 sticky top-0 z-50 max-lg:px-5 max-lg:py-4 max-sm:px-4 max-sm:py-3 max-sm:flex-col max-sm:gap-3 shadow-2xl">
-      <div className="relative flex-1 max-w-[500px] max-sm:max-w-full max-sm:w-full group">
+      <div className="flex items-center gap-4 flex-1 max-sm:w-full">
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2.5 hover:bg-white/10 rounded-xl transition-all duration-300 text-white/70 hover:text-white hover:scale-105 active:scale-95"
+          aria-label="Open menu"
+        >
+          <Menu size={24} />
+        </button>
+        
+        <div className="relative flex-1 max-w-[500px] max-sm:max-w-full max-sm:w-full group">
         <Search 
           size={20} 
           className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none transition-all duration-300 group-focus-within:text-primary group-focus-within:scale-110 max-sm:w-4 max-sm:h-4 max-sm:left-3" 
@@ -28,6 +38,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           onChange={handleSearch}
           className="w-full py-4 pl-12 pr-4 glass-premium border border-white/10 rounded-2xl text-white text-[15px] outline-none transition-all duration-300 placeholder:text-white/40 focus:border-primary/50 focus:shadow-[0_0_25px_rgba(147,51,234,0.25)] focus:bg-white/10 hover:bg-white/5 max-sm:py-3 max-sm:pl-10 max-sm:pr-3 max-sm:text-sm max-sm:rounded-xl"
         />
+      </div>
       </div>
 
       <div className="flex items-center gap-4">

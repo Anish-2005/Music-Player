@@ -67,7 +67,7 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
       <div className="flex flex-col gap-3 items-center max-lg:gap-2.5">
         <div className="flex items-center gap-3 max-lg:gap-2 max-sm:gap-1.5">
           <button
-            className={`bg-transparent border-none cursor-pointer p-2.5 flex items-center justify-center rounded-xl transition-all duration-300 ${
+            className={`bg-transparent border-none cursor-pointer p-2.5 flex items-center justify-center rounded-xl transition-all duration-300 max-lg:p-2 max-sm:p-1.5 ${
               playerState.isShuffleOn 
                 ? 'text-primary bg-primary/20 shadow-lg shadow-primary/30 scale-110' 
                 : 'text-white/60 hover:text-white hover:bg-white/10 hover:scale-110'
@@ -78,7 +78,7 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
             <Shuffle size={18} className="max-lg:w-4 max-lg:h-4" />
           </button>
           <button 
-            className="bg-transparent border-none text-white/70 cursor-pointer p-2.5 flex items-center justify-center rounded-xl transition-all duration-300 hover:text-white hover:bg-white/10 hover:scale-110 active:scale-95" 
+            className="bg-transparent border-none text-white/70 cursor-pointer p-2.5 flex items-center justify-center rounded-xl transition-all duration-300 hover:text-white hover:bg-white/10 hover:scale-110 active:scale-95 max-lg:p-2 max-sm:p-1.5"
             onClick={onPrevious} 
             aria-label="Previous"
           >
@@ -92,14 +92,14 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
             {playerState.isPlaying ? <Pause size={26} fill="currentColor" className="max-lg:w-6 max-lg:h-6 max-sm:w-5 max-sm:h-5" /> : <Play size={26} fill="currentColor" className="ml-1 max-lg:w-6 max-lg:h-6 max-sm:w-5 max-sm:h-5" />}
           </button>
           <button 
-            className="bg-transparent border-none text-white/70 cursor-pointer p-2.5 flex items-center justify-center rounded-xl transition-all duration-300 hover:text-white hover:bg-white/10 hover:scale-110 active:scale-95" 
+            className="bg-transparent border-none text-white/70 cursor-pointer p-2.5 flex items-center justify-center rounded-xl transition-all duration-300 hover:text-white hover:bg-white/10 hover:scale-110 active:scale-95 max-lg:p-2 max-sm:p-1.5" 
             onClick={onNext} 
             aria-label="Next"
           >
             <SkipForward size={22} fill="currentColor" className="max-lg:w-5 max-lg:h-5" />
           </button>
           <button
-            className={`bg-transparent border-none cursor-pointer p-2.5 flex items-center justify-center rounded-xl transition-all duration-300 ${
+            className={`bg-transparent border-none cursor-pointer p-2.5 flex items-center justify-center rounded-xl transition-all duration-300 max-lg:p-2 max-sm:p-1.5 ${
               playerState.repeatMode !== RepeatMode.OFF 
                 ? 'text-primary bg-primary/20 shadow-lg shadow-primary/30 scale-110' 
                 : 'text-white/60 hover:text-white hover:bg-white/10 hover:scale-110'
