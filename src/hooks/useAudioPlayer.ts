@@ -14,6 +14,8 @@ interface UseAudioPlayerProps {
   onDurationChange: (duration: number) => void;
   onEnded: () => void;
   onCanPlay: () => void;
+  onBufferingStart: () => void;
+  onBufferingEnd: () => void;
 }
 
 export const useAudioPlayer = ({
@@ -23,13 +25,15 @@ export const useAudioPlayer = ({
   onDurationChange,
   onEnded,
   onCanPlay,
+  onBufferingStart,
+  onBufferingEnd,
 }: UseAudioPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Initialize audio element
   useEffect(() => {
     const audio = new Audio();
-    audio.preload = 'auto'; // Preload audio for faster playback
+    audio.preload = 'metadata'; // Preload only metadata for faster initial load
     audio.volume = playerState.volume;
     audioRef.current = audio;
 
@@ -38,17 +42,23 @@ export const useAudioPlayer = ({
     const handleDurationChange = () => onDurationChange(audio.duration);
     const handleEnded = () => onEnded();
     const handleCanPlay = () => onCanPlay();
+    const handleWaiting = () => onBufferingStart();
+    const handleCanPlayThrough = () => onBufferingEnd();
 
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('durationchange', handleDurationChange);
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('waiting', handleWaiting);
+    audio.addEventListener('canplaythrough', handleCanPlayThrough);
 
     return () => {
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('durationchange', handleDurationChange);
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('waiting', handleWaiting);
+      audio.removeEventListener('canplaythrough', handleCanPlayThrough);
       audio.pause();
       audio.src = '';
     };

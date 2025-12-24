@@ -31,6 +31,7 @@ export const MusicPlayer: React.FC = () => {
             isPlaying={playerState.isPlaying}
             repeatMode={playerState.repeatMode}
             isShuffleOn={playerState.isShuffleOn}
+            isBuffering={playerState.isBuffering}
             onPlayPause={audioControls.togglePlayPause}
             onPrevious={audioControls.previousTrack}
             onNext={audioControls.nextTrack}

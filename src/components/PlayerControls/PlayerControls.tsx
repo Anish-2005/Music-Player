@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Play, Pause, SkipBack, SkipForward, Repeat, Repeat1, Shuffle } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Repeat, Repeat1, Shuffle, Loader } from 'lucide-react';
 import { RepeatMode } from '@/types';
 import './PlayerControls.css';
 
@@ -12,6 +12,7 @@ interface PlayerControlsProps {
   isPlaying: boolean;
   repeatMode: RepeatMode;
   isShuffleOn: boolean;
+  isBuffering: boolean;
   onPlayPause: () => void;
   onPrevious: () => void;
   onNext: () => void;
@@ -23,6 +24,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   isPlaying,
   repeatMode,
   isShuffleOn,
+  isBuffering,
   onPlayPause,
   onPrevious,
   onNext,
@@ -54,8 +56,9 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
         className="control-btn primary"
         onClick={onPlayPause}
         aria-label={isPlaying ? 'Pause' : 'Play'}
+        disabled={isBuffering}
       >
-        {isPlaying ? <Pause size={32} /> : <Play size={32} />}
+        {isBuffering ? <Loader size={32} className="animate-spin" /> : (isPlaying ? <Pause size={32} /> : <Play size={32} />)}
       </button>
 
       <button

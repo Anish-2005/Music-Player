@@ -34,6 +34,7 @@ export interface PlayerState {
   isMuted: boolean;
   repeatMode: RepeatMode;
   isShuffleOn: boolean;
+  isBuffering: boolean;
 }
 
 export interface AudioControls {

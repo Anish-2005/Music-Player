@@ -24,6 +24,7 @@ export const MusicPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
     isMuted: false,
     repeatMode: getStorageItem(STORAGE_KEYS.REPEAT_MODE, RepeatMode.OFF),
     isShuffleOn: getStorageItem(STORAGE_KEYS.SHUFFLE, false),
+    isBuffering: false,
   });
 
   // Playlist management
@@ -63,6 +64,14 @@ export const MusicPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
     // Track is ready to play
   }, []);
 
+  const handleBufferingStart = useCallback(() => {
+    setPlayerState(prev => ({ ...prev, isBuffering: true }));
+  }, []);
+
+  const handleBufferingEnd = useCallback(() => {
+    setPlayerState(prev => ({ ...prev, isBuffering: false }));
+  }, []);
+
   // Initialize audio player
   const { seek: audioSeek } = useAudioPlayer({
     track: currentTrack,
@@ -71,6 +80,8 @@ export const MusicPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
     onDurationChange: handleDurationChange,
     onEnded: handleEnded,
     onCanPlay: handleCanPlay,
+    onBufferingStart: handleBufferingStart,
+    onBufferingEnd: handleBufferingEnd,
   });
 
   // Audio controls
