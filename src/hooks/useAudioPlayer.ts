@@ -29,6 +29,8 @@ export const useAudioPlayer = ({
   // Initialize audio element
   useEffect(() => {
     const audio = new Audio();
+    audio.preload = 'auto'; // Preload audio for faster playback
+    audio.volume = playerState.volume;
     audioRef.current = audio;
 
     // Event listeners
@@ -55,19 +57,33 @@ export const useAudioPlayer = ({
   // Load track
   useEffect(() => {
     if (audioRef.current && track) {
+      const wasPlaying = playerState.isPlaying;
       audioRef.current.src = track.audioUrl;
       audioRef.current.load();
+      
+      // Auto-play if user was already playing
+      if (wasPlaying) {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.error('Playback failed:', error);
+          });
+        }
+      }
     }
-  }, [track]);
+  }, [track, playerState.isPlaying]);
 
   // Handle play/pause
   useEffect(() => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || !audioRef.current.src) return;
 
     if (playerState.isPlaying) {
-      audioRef.current.play().catch(error => {
-        console.error('Error playing audio:', error);
-      });
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.error('Error playing audio:', error);
+        });
+      }
     } else {
       audioRef.current.pause();
     }

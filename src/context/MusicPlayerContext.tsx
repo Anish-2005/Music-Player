@@ -118,8 +118,9 @@ export const MusicPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
   }, [playerState.currentTime, playlistPrev, seek]);
 
   const selectTrack = useCallback((index: number) => {
-    playlistSelect(index);
+    // Set playing state immediately for instant feedback
     setPlayerState(prev => ({ ...prev, currentTime: 0, isPlaying: true }));
+    playlistSelect(index);
   }, [playlistSelect]);
 
   const toggleRepeat = useCallback(() => {
