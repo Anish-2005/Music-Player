@@ -1,0 +1,256 @@
+.now-playing-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(40px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 1rem;
+  z-index: 1000;
+}
+
+.npb-track-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.npb-artwork {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.npb-artwork img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.npb-details {
+  min-width: 0;
+  flex: 1;
+}
+
+.npb-track-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 0.25rem;
+}
+
+.npb-track-artist {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.npb-controls-center {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.npb-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.npb-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.npb-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.npb-btn.active {
+  color: #667eea;
+}
+
+.npb-play-btn {
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  color: #000;
+}
+
+.npb-play-btn:hover {
+  background: #fff;
+  transform: scale(1.08);
+}
+
+.npb-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.npb-time {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+  min-width: 40px;
+  text-align: center;
+}
+
+.npb-progress-container {
+  position: relative;
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.npb-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #667eea;
+  border-radius: 3px;
+  pointer-events: none;
+  transition: width 0.1s linear;
+}
+
+.npb-progress-slider {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  transform: translateY(-50%);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.npb-progress-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.npb-progress-container:hover .npb-progress-slider::-webkit-slider-thumb {
+  opacity: 1;
+}
+
+.npb-controls-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.npb-volume-container {
+  position: relative;
+  width: 100px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.npb-volume-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #667eea;
+  border-radius: 3px;
+  pointer-events: none;
+  transition: width 0.1s ease;
+}
+
+.npb-volume-slider {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  transform: translateY(-50%);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.npb-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.npb-volume-container:hover .npb-volume-slider::-webkit-slider-thumb {
+  opacity: 1;
+}
+
+@media (max-width: 1024px) {
+  .now-playing-bar {
+    grid-template-columns: 1fr 1.5fr 0.5fr;
+  }
+
+  .npb-volume-container {
+    width: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .now-playing-bar {
+    height: auto;
+    grid-template-columns: 1fr;
+    padding: 0.75rem 1rem 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .npb-controls-right {
+    display: none;
+  }
+
+  .npb-progress {
+    max-width: 100%;
+  }
+}
