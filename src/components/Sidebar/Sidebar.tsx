@@ -19,7 +19,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange }) =>
     <aside className="w-[280px] h-screen glass-dark flex flex-col border-r border-white/10 fixed left-0 top-0 z-[100] lg:w-[280px] md:w-[240px] max-md:w-full max-md:h-auto max-md:relative">
       <div className="p-8 md:p-6 flex items-center gap-4 border-b border-white/10">
         <Music size={32} className="text-primary" />
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-white">
           Music Player
         </h1>
       </div>
