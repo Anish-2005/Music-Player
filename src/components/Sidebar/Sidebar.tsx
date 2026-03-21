@@ -1,98 +1,128 @@
 import React from 'react';
-import { Home, Music, ListMusic, Heart, Clock, Plus, X } from 'lucide-react';
+import { Home, Music2, ListMusic, Heart, History, Plus, X, Disc3 } from 'lucide-react';
+import { Track } from '@/types';
 
 interface SidebarProps {
   activeView: string;
   onViewChange: (view: string) => void;
   isOpen: boolean;
   onClose: () => void;
+  counts: Record<string, number>;
+  currentTrack: Track | null;
+  isPlaying: boolean;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, isOpen, onClose }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  activeView,
+  onViewChange,
+  isOpen,
+  onClose,
+  counts,
+  currentTrack,
+  isPlaying,
+}) => {
   const menuItems = [
     { id: 'home', label: 'Home', icon: Home },
-    { id: 'library', label: 'Your Library', icon: Music },
+    { id: 'library', label: 'Library', icon: Music2 },
     { id: 'playlists', label: 'Playlists', icon: ListMusic },
     { id: 'favorites', label: 'Liked Songs', icon: Heart },
-    { id: 'recent', label: 'Recently Played', icon: Clock },
+    { id: 'recent', label: 'Recently Played', icon: History },
   ];
 
   return (
     <>
-      {/* Backdrop for mobile */}
-      <div 
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] lg:hidden transition-opacity duration-300 ${
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      <div
+        className={`fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+          isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={onClose}
         aria-hidden="true"
       />
-      
-      <aside 
-        className={`w-[280px] h-screen glass-dark flex flex-col border-r border-white/5 fixed left-0 top-0 z-[200] lg:w-[280px] md:w-[240px] backdrop-blur-2xl shadow-2xl transition-transform duration-300 ease-out ${
-          isOpen ? 'translate-x-0' : 'max-lg:-translate-x-full'
+
+      <aside
+        className={`fixed left-0 top-0 z-50 flex h-screen w-[272px] flex-col border-r border-cyan-100/15 bg-slate-950/80 shadow-2xl backdrop-blur-2xl transition-transform duration-300 lg:translate-x-0 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         role="navigation"
-        aria-label="Main navigation sidebar"
+        aria-label="Main navigation"
       >
-      <div className="p-8 md:p-6 flex items-center gap-4 border-b border-white/5 bg-gradient-to-br from-white/5 to-transparent justify-between">
-        <div className="flex items-center gap-4">
-          {/* App Logo - bigger, plain */}
-          <img
-            src="/mm-logo.png"
-            alt="Music Maniac Logo"
-            className="h-16 w-16 object-contain max-sm:h-12 max-sm:w-12"
-            style={{ marginRight: '0.75rem' }}
-          />
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-purple-400 to-primary-dark bg-clip-text text-transparent">
-            Music Maniac
-          </h1>
+        <div className="flex items-center justify-between border-b border-cyan-100/10 px-5 py-5">
+          <div className="flex items-center gap-3">
+            <img src="/mm-logo.png" alt="Music Maniac" className="h-10 w-10 rounded-lg object-cover" />
+            <div>
+              <p className="title-font text-base font-semibold text-white">Music Maniac</p>
+              <p className="text-[11px] uppercase tracking-[0.14em] text-cyan-100/55">Studio Console</p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-cyan-100/65 transition hover:bg-white/10 hover:text-white lg:hidden"
+            aria-label="Close menu"
+          >
+            <X size={18} />
+          </button>
         </div>
-        <button
-          onClick={onClose}
-          className="lg:hidden p-2 hover:bg-white/10 rounded-lg transition-colors duration-200 text-white/70 hover:text-white"
-          aria-label="Close menu"
-        >
-          <X size={24} />
-        </button>
-      </div>
 
-      <nav className="flex-1 py-6 overflow-y-auto px-3">
-        {menuItems.map(item => {
-          const Icon = item.icon;
-          const isActive = activeView === item.id;
-          return (
-            <button
-              key={item.id}
-              className={`w-full flex items-center gap-4 px-4 py-3.5 mb-2 rounded-xl bg-transparent border-none cursor-pointer transition-all duration-300 text-base font-medium text-left group ${
-                isActive 
-                  ? 'text-white bg-gradient-to-r from-primary/25 to-purple-500/25 shadow-lg shadow-primary/20 scale-[1.02]' 
-                  : 'text-white/60 hover:text-white hover:bg-white/10 hover:scale-[1.01]'
-              }`}
-              onClick={() => onViewChange(item.id)}
-            >
-              <Icon 
-                size={22} 
-                className={`transition-all duration-300 ${
-                  isActive ? 'text-primary drop-shadow-[0_0_8px_rgba(147,51,234,0.5)]' : 'group-hover:scale-110'
+        <nav className="flex-1 overflow-y-auto px-3 py-4">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeView === item.id;
+
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => onViewChange(item.id)}
+                className={`interactive-lift mb-1.5 flex w-full items-center gap-3 rounded-xl border px-3.5 py-3 text-left ${
+                  isActive
+                    ? 'border-cyan-300/45 bg-cyan-300/16 text-white'
+                    : 'border-transparent text-cyan-50/70 hover:bg-white/8 hover:text-white'
                 }`}
-              />
-              <span className="font-semibold">{item.label}</span>
-              {isActive && (
-                <div className="ml-auto w-2 h-2 rounded-full bg-primary animate-pulse shadow-lg shadow-primary/50" />
-              )}
-            </button>
-          );
-        })}
-      </nav>
+              >
+                <Icon size={18} className={isActive ? 'text-cyan-200' : 'text-cyan-100/65'} />
+                <span className="text-sm font-semibold">{item.label}</span>
+                <span className="ml-auto rounded-full bg-white/8 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.07em] text-cyan-100/65">
+                  {counts[item.id] ?? 0}
+                </span>
+              </button>
+            );
+          })}
+        </nav>
 
-      <div className="p-6 border-t border-white/5 bg-gradient-to-t from-white/5 to-transparent">
-        <button className="w-full flex items-center justify-center gap-3 px-4 py-4 glass-premium border border-white/20 rounded-xl text-white cursor-pointer transition-all duration-300 text-[15px] font-bold hover:bg-gradient-to-r hover:from-primary/30 hover:to-purple-600/30 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] group">
-          <Plus size={20} className="group-hover:rotate-90 transition-transform duration-300" />
-          <span>Create Playlist</span>
-        </button>
-      </div>
-    </aside>
+        <div className="space-y-3 border-t border-cyan-100/10 p-4">
+          <button
+            type="button"
+            className="interactive-lift flex w-full items-center justify-center gap-2 rounded-xl border border-cyan-200/35 bg-cyan-400/12 px-3 py-3 text-sm font-semibold text-cyan-50"
+          >
+            <Plus size={16} />
+            Create Playlist
+          </button>
+
+          {currentTrack && (
+            <div className="surface rounded-xl p-3">
+              <p className="text-[10px] uppercase tracking-[0.14em] text-cyan-100/55">Now Playing</p>
+              <div className="mt-2 flex items-center gap-2.5">
+                <img
+                  src={currentTrack.albumArt}
+                  alt={currentTrack.name}
+                  className="h-10 w-10 rounded-lg object-cover"
+                  loading="lazy"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-white">{currentTrack.name}</p>
+                  <p className="truncate text-xs text-cyan-100/60">{currentTrack.artist}</p>
+                </div>
+                <Disc3
+                  size={16}
+                  className={`text-cyan-200 ${isPlaying ? 'animate-[rotate-slow_4s_linear_infinite]' : ''}`}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </aside>
     </>
   );
 };

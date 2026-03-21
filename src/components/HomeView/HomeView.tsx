@@ -1,120 +1,172 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { PlayCircle, Clock3, Heart, Library } from 'lucide-react';
 import { Track } from '@/types';
 import { TrackCard } from '@/components/TrackCard/TrackCard';
 
+export interface IndexedTrack {
+  track: Track;
+  index: number;
+}
+
+export interface TrackSection {
+  id: string;
+  title: string;
+  description: string;
+  tracks: IndexedTrack[];
+}
+
 interface HomeViewProps {
-  tracks: Track[];
+  pageTitle: string;
+  pageDescription: string;
+  highlightTitle: string;
+  highlightSubtitle: string;
+  sections: TrackSection[];
   currentTrackIndex: number;
   isPlaying: boolean;
+  viewMode: 'grid' | 'list';
+  likedTrackIds: Set<string>;
+  libraryCount: number;
+  likedCount: number;
+  recentCount: number;
   onSelectTrack: (index: number) => void;
+  onToggleLike: (trackId: string) => void;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
-  tracks,
+  pageTitle,
+  pageDescription,
+  highlightTitle,
+  highlightSubtitle,
+  sections,
   currentTrackIndex,
   isPlaying,
+  viewMode,
+  likedTrackIds,
+  libraryCount,
+  likedCount,
+  recentCount,
   onSelectTrack,
+  onToggleLike,
 }) => {
-  const featuredTracks = tracks.slice(0, 6);
-  const recentTracks = tracks.slice(6, 12);
+  const totalTracksVisible = useMemo(
+    () => sections.reduce((total, section) => total + section.tracks.length, 0),
+    [sections]
+  );
+
+  const firstPlayableTrack = useMemo(
+    () => sections.find((section) => section.tracks.length > 0)?.tracks[0],
+    [sections]
+  );
 
   return (
-    <div className="p-8 max-w-[1600px] mx-auto max-lg:p-6 max-md:p-4 max-sm:p-3 pb-32 max-sm:pb-24">
-      <section className="mb-12 p-12 bg-gradient-to-br from-primary/30 via-purple-600/20 to-primary-dark/30 rounded-3xl backdrop-blur-xl border border-white/10 max-lg:p-10 max-md:p-6 max-sm:p-5 max-md:mb-8 max-sm:mb-6 max-sm:rounded-2xl shadow-[0_20px_60px_rgba(147,51,234,0.3)] relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse-slow"></div>
-        <div className="relative text-center z-10">
-          <h1 className="text-6xl font-black mb-5 bg-gradient-to-br from-white via-purple-200 to-primary bg-clip-text text-transparent drop-shadow-[0_4px_30px_rgba(147,51,234,0.4)] max-lg:text-5xl max-md:text-3xl max-sm:text-2xl max-sm:mb-3 animate-fade-in">
-            Welcome to Your Music
-          </h1>
-          <p className="text-xl text-white/70 font-medium max-lg:text-lg max-md:text-base max-sm:text-sm">
-            Discover and play your favorite tracks
-          </p>
+    <div className="mx-auto w-full max-w-[1680px] px-4 py-6 pb-36 lg:px-8">
+      <section className="surface-strong relative overflow-hidden rounded-3xl p-5 md:p-8">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-amber-300/20 blur-3xl" />
+
+        <div className="relative z-10 flex flex-wrap items-start justify-between gap-5">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-100/55">Refined Listening Experience</p>
+            <h2 className="title-font mt-3 text-3xl font-semibold text-white md:text-5xl">{highlightTitle}</h2>
+            <p className="mt-2 max-w-3xl text-sm text-cyan-100/70 md:text-base">{highlightSubtitle}</p>
+          </div>
+
+          <button
+            type="button"
+            disabled={!firstPlayableTrack}
+            onClick={() => {
+              if (firstPlayableTrack) {
+                onSelectTrack(firstPlayableTrack.index);
+              }
+            }}
+            className="interactive-lift inline-flex h-11 items-center gap-2 rounded-xl border border-cyan-200/40 bg-cyan-300/15 px-4 text-sm font-semibold text-cyan-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <PlayCircle size={18} />
+            Play Featured
+          </button>
+        </div>
+
+        <div className="relative z-10 mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="surface rounded-2xl p-3">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-cyan-100/55">
+              <Library size={14} /> Library
+            </div>
+            <p className="mt-1.5 text-2xl font-semibold text-white">{libraryCount}</p>
+          </div>
+          <div className="surface rounded-2xl p-3">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-cyan-100/55">
+              <Heart size={14} /> Liked
+            </div>
+            <p className="mt-1.5 text-2xl font-semibold text-white">{likedCount}</p>
+          </div>
+          <div className="surface rounded-2xl p-3">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-cyan-100/55">
+              <Clock3 size={14} /> Recent
+            </div>
+            <p className="mt-1.5 text-2xl font-semibold text-white">{recentCount}</p>
+          </div>
         </div>
       </section>
 
-      <section className="mb-14">
-        <div className="flex items-center justify-between mb-8 max-sm:mb-5">
+      <section className="mt-8">
+        <div className="mb-5 flex items-end justify-between gap-3">
           <div>
-            <h2 className="text-4xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-2 max-lg:text-3xl max-md:text-xl max-sm:text-lg max-sm:mb-1.5">
-              Featured Tracks
-            </h2>
-            <div className="h-1.5 w-24 bg-gradient-to-r from-primary to-purple-600 rounded-full shadow-lg shadow-primary/50 max-sm:h-1 max-sm:w-16"></div>
+            <h3 className="title-font text-2xl font-semibold text-white md:text-3xl">{pageTitle}</h3>
+            <p className="text-sm text-cyan-100/65">{pageDescription}</p>
           </div>
-          <button className="px-5 py-2.5 bg-transparent border border-white/20 rounded-xl text-white/70 text-sm font-bold cursor-pointer transition-all duration-300 hover:text-white hover:bg-white/10 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 active:scale-95 max-sm:px-3 max-sm:py-2 max-sm:text-xs max-sm:rounded-lg">
-            See All
-          </button>
+          <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.1em] text-cyan-100/65">
+            {totalTracksVisible} visible
+          </span>
         </div>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6 xl:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] sm:grid-cols-2 max-sm:grid-cols-1 max-md:gap-4 max-sm:gap-3">
-          {featuredTracks.map((track, index) => (
-            <TrackCard
-              key={track.id}
-              track={track}
-              index={index}
-              isPlaying={isPlaying}
-              isCurrentTrack={currentTrackIndex === index}
-              onPlay={onSelectTrack}
-            />
-          ))}
-        </div>
-      </section>
 
-      <section className="mb-14">
-        <div className="flex items-center justify-between mb-8 max-sm:mb-5">
-          <div>
-            <h2 className="text-4xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-2 max-lg:text-3xl max-md:text-xl max-sm:text-lg max-sm:mb-1.5">
-              More Tracks
-            </h2>
-            <div className="h-1.5 w-24 bg-gradient-to-r from-purple-600 to-primary rounded-full shadow-lg shadow-purple-500/50 max-sm:h-1 max-sm:w-16"></div>
+        {totalTracksVisible === 0 && (
+          <div className="surface rounded-2xl border border-dashed border-cyan-100/25 p-8 text-center">
+            <p className="title-font text-xl font-semibold text-white">No tracks found</p>
+            <p className="mt-2 text-sm text-cyan-100/65">Try a different search term or switch to another section.</p>
           </div>
-          <button className="px-5 py-2.5 bg-transparent border border-white/20 rounded-xl text-white/70 text-sm font-bold cursor-pointer transition-all duration-300 hover:text-white hover:bg-white/10 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 active:scale-95 max-sm:px-3 max-sm:py-2 max-sm:text-xs max-sm:rounded-lg">
-            See All
-          </button>
-        </div>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6 xl:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] sm:grid-cols-2 max-sm:grid-cols-1 max-md:gap-4 max-sm:gap-3">
-          {recentTracks.map((track, index) => {
-            const actualIndex = index + 6;
+        )}
+
+        <div className="space-y-7">
+          {sections.map((section) => {
+            if (section.tracks.length === 0) return null;
+
             return (
-              <TrackCard
-                key={track.id}
-                track={track}
-                index={actualIndex}
-                isPlaying={isPlaying}
-                isCurrentTrack={currentTrackIndex === actualIndex}
-                onPlay={onSelectTrack}
-              />
+              <div key={section.id}>
+                <div className="mb-3 flex items-end justify-between gap-3">
+                  <div>
+                    <h4 className="title-font text-xl font-semibold text-white md:text-2xl">{section.title}</h4>
+                    <p className="text-xs text-cyan-100/65 md:text-sm">{section.description}</p>
+                  </div>
+                  <span className="text-xs font-semibold uppercase tracking-[0.1em] text-cyan-100/55">{section.tracks.length} tracks</span>
+                </div>
+
+                <div
+                  className={`stagger-children ${
+                    viewMode === 'grid'
+                      ? 'grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
+                      : 'flex flex-col gap-2'
+                  }`}
+                >
+                  {section.tracks.map(({ track, index }, sectionIndex) => (
+                    <TrackCard
+                      key={`${section.id}-${track.id}`}
+                      track={track}
+                      index={index}
+                      order={sectionIndex + 1}
+                      isPlaying={isPlaying}
+                      isCurrentTrack={currentTrackIndex === index}
+                      isLiked={likedTrackIds.has(track.id)}
+                      layout={viewMode}
+                      onPlay={onSelectTrack}
+                      onToggleLike={onToggleLike}
+                    />
+                  ))}
+                </div>
+              </div>
             );
           })}
         </div>
       </section>
-
-      {tracks.length > 12 && (
-        <section className="mb-14">
-          <div className="flex items-center justify-between mb-8 max-sm:mb-5">
-            <div>
-              <h2 className="text-4xl font-black bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-2 max-lg:text-3xl max-md:text-xl max-sm:text-lg max-sm:mb-1.5">
-                All Songs
-              </h2>
-              <div className="h-1.5 w-24 bg-gradient-to-r from-primary via-purple-500 to-primary-dark rounded-full shadow-lg shadow-primary/50 max-sm:h-1 max-sm:w-16"></div>
-            </div>
-          </div>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6 xl:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] sm:grid-cols-2 max-sm:grid-cols-1 max-md:gap-4 max-sm:gap-3">
-            {tracks.slice(12).map((track, index) => {
-              const actualIndex = index + 12;
-              return (
-                <TrackCard
-                  key={track.id}
-                  track={track}
-                  index={actualIndex}
-                  isPlaying={isPlaying}
-                  isCurrentTrack={currentTrackIndex === actualIndex}
-                  onPlay={onSelectTrack}
-                />
-              );
-            })}
-          </div>
-        </section>
-      )}
     </div>
   );
 };

@@ -1,67 +1,144 @@
 import React from 'react';
+import { Heart, Play, Pause, Music2 } from 'lucide-react';
 import { Track } from '@/types';
-import { Play, Pause } from 'lucide-react';
 
 interface TrackCardProps {
   track: Track;
   index: number;
+  order: number;
   isPlaying: boolean;
   isCurrentTrack: boolean;
+  isLiked: boolean;
+  layout: 'grid' | 'list';
   onPlay: (index: number) => void;
+  onToggleLike: (trackId: string) => void;
 }
 
 export const TrackCard: React.FC<TrackCardProps> = ({
   track,
   index,
+  order,
   isPlaying,
   isCurrentTrack,
+  isLiked,
+  layout,
   onPlay,
+  onToggleLike,
 }) => {
   const handleClick = () => {
     onPlay(index);
   };
 
-  return (
-    <div
-      className={`group glass-premium rounded-2xl p-5 cursor-pointer transition-all duration-500 border border-transparent hover:border-primary/30 hover:bg-gradient-to-br hover:from-white/15 hover:to-white/5 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4),0_0_30px_rgba(147,51,234,0.2)] active:scale-95 max-sm:p-3 max-sm:rounded-xl max-sm:hover:-translate-y-1 ${
-        isCurrentTrack ? 'bg-gradient-to-br from-primary/20 to-purple-600/20 border-primary/40 shadow-[0_8px_32px_rgba(147,51,234,0.3)]' : ''
-      }`}
-      onClick={handleClick}
-    >
-      <div className="relative w-full aspect-square rounded-xl overflow-hidden mb-4 bg-black/40 shadow-xl group-hover:shadow-2xl group-hover:shadow-primary/20 transition-all duration-500 max-sm:mb-3 max-sm:rounded-lg">
-        <img 
-          src={track.albumArt} 
-          alt={track.name} 
-          loading="eager" 
-          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-110" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        <div className={`absolute inset-0 bg-gradient-to-br from-primary/30 to-purple-600/30 flex items-center justify-center opacity-0 transition-all duration-500 backdrop-blur-sm ${isCurrentTrack ? 'opacity-100' : 'group-hover:opacity-100'}`}>
-          <div className={`p-4 rounded-full bg-white/20 backdrop-blur-md border-2 border-white/40 shadow-2xl transition-all duration-300 max-sm:p-3 ${isCurrentTrack ? 'scale-100 animate-pulse-slow' : 'scale-0 group-hover:scale-100'}`}>
-            {isCurrentTrack && isPlaying ? (
-              <Pause size={32} className="text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] max-sm:w-6 max-sm:h-6" />
-            ) : (
-              <Play size={32} className="text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] max-sm:w-6 max-sm:h-6" />
-            )}
+  const handleLikeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    onToggleLike(track.id);
+  };
+
+  if (layout === 'list') {
+    return (
+      <article
+        role="button"
+        tabIndex={0}
+        onClick={handleClick}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            handleClick();
+          }
+        }}
+        className={`interactive-lift surface flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 md:px-4 md:py-3 ${
+          isCurrentTrack ? 'border-cyan-200/55 bg-cyan-300/14' : 'border-white/8'
+        }`}
+      >
+        <span className="w-7 text-center text-xs font-semibold text-cyan-100/60">{order}</span>
+
+        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-slate-900/65 md:h-14 md:w-14">
+          <img src={track.albumArt} alt={track.name} className="h-full w-full object-cover" loading="lazy" />
+          <div className="absolute inset-0 flex items-center justify-center bg-slate-900/55">
+            {isCurrentTrack && isPlaying ? <Pause size={18} className="text-white" /> : <Play size={18} className="text-white" />}
           </div>
         </div>
+
+        <div className="min-w-0 flex-1">
+          <h3 className="truncate text-sm font-semibold text-white md:text-base">{track.name}</h3>
+          <p className="truncate text-xs text-cyan-100/60 md:text-sm">{track.artist}</p>
+        </div>
+
         {isCurrentTrack && (
-          <div className="absolute top-3 right-3 flex gap-1 max-sm:top-2 max-sm:right-2 max-sm:gap-0.5">
-            <div className="w-1 h-4 bg-primary rounded-full animate-sound-wave max-sm:h-3"></div>
-            <div className="w-1 h-6 bg-primary rounded-full animate-sound-wave animation-delay-100 max-sm:h-4"></div>
-            <div className="w-1 h-5 bg-primary rounded-full animate-sound-wave animation-delay-200 max-sm:h-3.5"></div>
+          <div className="hidden items-end gap-0.5 md:flex" aria-hidden="true">
+            <span className="h-3 w-1 origin-bottom rounded-full bg-cyan-300 [animation:pulse-bars_800ms_ease-in-out_infinite]" />
+            <span className="h-4 w-1 origin-bottom rounded-full bg-cyan-300 [animation:pulse-bars_800ms_ease-in-out_120ms_infinite]" />
+            <span className="h-3 w-1 origin-bottom rounded-full bg-cyan-300 [animation:pulse-bars_800ms_ease-in-out_220ms_infinite]" />
           </div>
         )}
+
+        <button
+          type="button"
+          onClick={handleLikeClick}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cyan-100/70 transition hover:bg-white/10 hover:text-cyan-100"
+          aria-label={isLiked ? 'Remove from liked songs' : 'Add to liked songs'}
+        >
+          <Heart size={16} className={isLiked ? 'fill-amber-300 text-amber-300' : ''} />
+        </button>
+      </article>
+    );
+  }
+
+  return (
+    <article
+      role="button"
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          handleClick();
+        }
+      }}
+      className={`interactive-lift surface group relative cursor-pointer rounded-2xl border p-3 sm:p-4 ${
+        isCurrentTrack ? 'border-cyan-200/55 bg-cyan-300/12' : 'border-white/8'
+      }`}
+    >
+      <button
+        type="button"
+        onClick={handleLikeClick}
+        className="absolute right-3 top-3 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-slate-950/45 text-cyan-100/70 transition hover:border-cyan-200/45 hover:text-cyan-100"
+        aria-label={isLiked ? 'Remove from liked songs' : 'Add to liked songs'}
+      >
+        <Heart size={15} className={isLiked ? 'fill-amber-300 text-amber-300' : ''} />
+      </button>
+
+      <div className="relative mb-3 overflow-hidden rounded-xl bg-slate-900/55">
+        <img
+          src={track.albumArt}
+          alt={track.name}
+          loading="lazy"
+          className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/20 to-transparent" />
+
+        <div className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-full bg-slate-950/70 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-cyan-50/80">
+          <Music2 size={12} />
+          Track {order}
+        </div>
+
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 group-hover:opacity-100">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-cyan-300/85 text-slate-950 shadow-xl shadow-cyan-300/30">
+            {isCurrentTrack && isPlaying ? <Pause size={20} /> : <Play size={20} />}
+          </div>
+        </div>
       </div>
-      
-      <div className="px-1">
-        <h3 className="text-base font-bold text-white mb-2 overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-primary transition-colors duration-300 max-sm:text-sm max-sm:mb-1">
-          {track.name}
-        </h3>
-        <p className="text-sm text-white/50 overflow-hidden text-ellipsis whitespace-nowrap group-hover:text-white/70 transition-colors duration-300 font-medium max-sm:text-xs">
-          {track.artist}
-        </p>
-      </div>
-    </div>
+
+      <h3 className="truncate text-sm font-semibold text-white md:text-base">{track.name}</h3>
+      <p className="truncate text-xs text-cyan-100/60 md:text-sm">{track.artist}</p>
+
+      {isCurrentTrack && (
+        <div className="mt-2 flex items-end gap-0.5" aria-hidden="true">
+          <span className="h-2.5 w-1 origin-bottom rounded-full bg-cyan-300 [animation:pulse-bars_780ms_ease-in-out_infinite]" />
+          <span className="h-3.5 w-1 origin-bottom rounded-full bg-cyan-300 [animation:pulse-bars_780ms_ease-in-out_100ms_infinite]" />
+          <span className="h-2.5 w-1 origin-bottom rounded-full bg-cyan-300 [animation:pulse-bars_780ms_ease-in-out_200ms_infinite]" />
+        </div>
+      )}
+    </article>
   );
 };
