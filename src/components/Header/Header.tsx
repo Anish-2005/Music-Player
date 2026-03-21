@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/55 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/55 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-[1680px] flex-wrap items-center gap-3 px-3 py-3 sm:px-4 sm:py-4 lg:px-8">
         <div className="flex min-w-0 items-center gap-2.5 sm:gap-3 lg:flex-1">
           <button
@@ -69,7 +69,7 @@ export const Header: React.FC<HeaderProps> = ({
           />
         </label>
 
-        <div className="ml-auto flex items-center gap-2 sm:gap-3">
+        <div className="ml-auto flex items-center gap-2 min-[360px]:gap-2.5 sm:gap-3">
           <div className="surface inline-flex rounded-xl p-1" role="group" aria-label="Switch layout mode">
             <button
               type="button"

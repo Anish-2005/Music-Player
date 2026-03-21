@@ -294,6 +294,7 @@ export const Dashboard: React.FC = () => {
   const handleOpenCreatePlaylist = useCallback(() => {
     const nextDefaultName = `My Playlist ${customPlaylists.length + 1}`;
     setSuggestedPlaylistName(nextDefaultName);
+    setIsSidebarOpen(false);
     setIsCreatePlaylistModalOpen(true);
   }, [customPlaylists.length]);
 
@@ -432,6 +433,19 @@ export const Dashboard: React.FC = () => {
     };
   }, [playerState.currentTime, playerState.duration, seek, togglePlayPause]);
 
+  useEffect(() => {
+    const shouldLockScroll = isSidebarOpen || isCreatePlaylistModalOpen || playlistEditor.isOpen;
+    const previousOverflow = document.body.style.overflow;
+
+    if (shouldLockScroll) {
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isCreatePlaylistModalOpen, isSidebarOpen, playlistEditor.isOpen]);
+
   return (
     <div className="relative min-h-screen" role="main">
       <Sidebar
@@ -451,7 +465,7 @@ export const Dashboard: React.FC = () => {
       />
 
       <main
-        className={`min-h-screen transition-[padding] duration-300 ${
+        className={`min-h-screen transition-[padding] duration-300 ease-in-out ${
           isSidebarCollapsed ? 'lg:pl-[92px]' : 'lg:pl-[272px]'
         }`}
       >
@@ -472,6 +486,7 @@ export const Dashboard: React.FC = () => {
           sections={pageContent.sections}
           currentTrackIndex={playlistState.currentTrackIndex}
           isPlaying={playerState.isPlaying}
+          isNowPlayingOpen={isNowPlayingOpen}
           viewMode={viewMode}
           likedTrackIds={likedTrackSet}
           libraryCount={allEntries.length}
@@ -509,7 +524,7 @@ export const Dashboard: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsNowPlayingOpen(true)}
-          className="fixed bottom-4 right-4 z-[95] inline-flex items-center gap-2 rounded-full border border-cyan-100/25 bg-slate-950/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-cyan-100 shadow-lg shadow-slate-950/50 backdrop-blur-xl transition hover:border-cyan-300/50 hover:text-white"
+          className="fixed bottom-[max(0.9rem,env(safe-area-inset-bottom))] right-3 z-[95] inline-flex items-center gap-2 rounded-full border border-cyan-100/25 bg-slate-950/90 px-3.5 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-cyan-100 shadow-lg shadow-slate-950/50 backdrop-blur-xl transition hover:border-cyan-300/50 hover:text-white sm:right-4 sm:px-4 sm:text-xs"
         >
           <Music2 size={14} />
           Now Playing

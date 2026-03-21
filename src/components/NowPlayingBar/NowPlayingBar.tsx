@@ -67,23 +67,23 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[90] border-t border-cyan-100/20 bg-slate-950/92 backdrop-blur-2xl">
-      <div className="mx-auto w-full max-w-[1680px] px-3 pb-[max(0.7rem,env(safe-area-inset-bottom))] pt-2.5 sm:px-4 md:hidden">
-        <div className="flex items-center gap-2.5">
+      <div className="mx-auto w-full max-w-[1680px] px-2.5 pb-[max(0.7rem,env(safe-area-inset-bottom))] pt-2.5 min-[390px]:px-3 sm:px-4 md:hidden">
+        <div className="flex items-center gap-2 min-[390px]:gap-2.5">
           <img src={track.albumArt} alt={track.name} className="h-10 w-10 rounded-lg object-cover" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs font-semibold text-white">{track.name}</p>
             <p className="truncate text-[11px] text-cyan-100/60">{track.artist}</p>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <span className="inline-flex items-center gap-1 rounded-full border border-white/12 bg-white/5 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-cyan-100/65">
+          <div className="flex items-center gap-1">
+            <span className="hidden items-center gap-1 rounded-full border border-white/12 bg-white/5 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-cyan-100/65 min-[360px]:inline-flex">
               <Radio size={10} />
               {queueCount}
             </span>
             <button
               type="button"
               onClick={onToggleLike}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cyan-100/70 transition hover:bg-white/10 hover:text-cyan-100"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cyan-100/70 transition hover:bg-white/10 hover:text-cyan-100 min-[390px]:h-9 min-[390px]:w-9"
               aria-label={isLiked ? 'Remove from liked songs' : 'Add to liked songs'}
             >
               <Heart size={16} className={isLiked ? 'fill-amber-300 text-amber-300' : ''} />
@@ -91,7 +91,7 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cyan-100/70 transition hover:bg-white/10 hover:text-white"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cyan-100/70 transition hover:bg-white/10 hover:text-white min-[390px]:h-9 min-[390px]:w-9"
               aria-label="Close now playing"
             >
               <X size={16} />
@@ -121,45 +121,45 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
           <span className="w-9 text-[10px] font-semibold tabular-nums text-cyan-100/60">{formatTime(playerState.duration)}</span>
         </div>
 
-        <div className="mt-2.5 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1">
+        <div className="mt-2.5 flex items-center justify-between gap-1.5 min-[390px]:gap-2">
+          <div className="flex items-center gap-0.5 min-[390px]:gap-1">
             <button
               type="button"
               onClick={onPrevious}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-cyan-100/75 transition hover:bg-white/10 hover:text-white"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cyan-100/75 transition hover:bg-white/10 hover:text-white min-[390px]:h-10 min-[390px]:w-10"
               aria-label="Previous track"
             >
-              <SkipBack size={18} />
+              <SkipBack size={17} className="min-[390px]:h-[18px] min-[390px]:w-[18px]" />
             </button>
             <button
               type="button"
               onClick={onPlayPause}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-cyan-300 text-slate-950 shadow-lg shadow-cyan-300/25 transition active:scale-[0.98]"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cyan-300 text-slate-950 shadow-lg shadow-cyan-300/25 transition active:scale-[0.98] min-[390px]:h-11 min-[390px]:w-11"
               aria-label={playerState.isPlaying ? 'Pause' : 'Play'}
             >
               {playerState.isBuffering ? (
-                <Loader2 size={18} className="animate-spin" />
+                <Loader2 size={17} className="animate-spin min-[390px]:h-[18px] min-[390px]:w-[18px]" />
               ) : playerState.isPlaying ? (
-                <Pause size={20} />
+                <Pause size={18} className="min-[390px]:h-[20px] min-[390px]:w-[20px]" />
               ) : (
-                <Play size={20} className="translate-x-[1px]" />
+                <Play size={18} className="translate-x-[1px] min-[390px]:h-[20px] min-[390px]:w-[20px]" />
               )}
             </button>
             <button
               type="button"
               onClick={onNext}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-cyan-100/75 transition hover:bg-white/10 hover:text-white"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cyan-100/75 transition hover:bg-white/10 hover:text-white min-[390px]:h-10 min-[390px]:w-10"
               aria-label="Next track"
             >
-              <SkipForward size={18} />
+              <SkipForward size={17} className="min-[390px]:h-[18px] min-[390px]:w-[18px]" />
             </button>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5 min-[390px]:gap-1">
             <button
               type="button"
               onClick={onToggleShuffle}
-              className={`inline-flex h-9 w-9 items-center justify-center rounded-full transition ${
+              className={`inline-flex h-8 w-8 items-center justify-center rounded-full transition min-[390px]:h-9 min-[390px]:w-9 ${
                 playerState.isShuffleOn ? 'bg-cyan-300/22 text-cyan-100' : 'text-cyan-100/65 hover:bg-white/10 hover:text-white'
               }`}
               aria-label="Toggle shuffle"
@@ -169,7 +169,7 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
             <button
               type="button"
               onClick={onToggleRepeat}
-              className={`inline-flex h-9 w-9 items-center justify-center rounded-full transition ${
+              className={`inline-flex h-8 w-8 items-center justify-center rounded-full transition min-[390px]:h-9 min-[390px]:w-9 ${
                 playerState.repeatMode !== RepeatMode.OFF
                   ? 'bg-cyan-300/22 text-cyan-100'
                   : 'text-cyan-100/65 hover:bg-white/10 hover:text-white'
@@ -181,7 +181,7 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
             <button
               type="button"
               onClick={onToggleMute}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cyan-100/75 transition hover:bg-white/10 hover:text-white"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cyan-100/75 transition hover:bg-white/10 hover:text-white min-[390px]:h-9 min-[390px]:w-9"
               aria-label={playerState.isMuted ? 'Unmute' : 'Mute'}
             >
               <VolumeIcon size={16} />

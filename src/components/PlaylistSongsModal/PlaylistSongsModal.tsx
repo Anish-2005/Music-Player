@@ -57,8 +57,8 @@ export const PlaylistSongsModal: React.FC<PlaylistSongsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[145] flex items-center justify-center bg-slate-950/75 p-3 backdrop-blur-sm sm:p-5">
-      <div className="surface-strong flex w-full max-w-2xl flex-col rounded-2xl border border-cyan-100/20">
+    <div className="fixed inset-0 z-[145] flex items-end justify-center bg-slate-950/75 p-0 backdrop-blur-sm sm:items-center sm:p-5">
+      <div className="surface-strong flex h-[85dvh] w-full max-w-2xl flex-col rounded-t-2xl border border-cyan-100/20 sm:h-auto sm:max-h-[80dvh] sm:rounded-2xl">
         <div className="flex items-start justify-between border-b border-cyan-100/10 p-4 sm:p-5">
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-100/55">Playlist Editor</p>
@@ -78,7 +78,7 @@ export const PlaylistSongsModal: React.FC<PlaylistSongsModalProps> = ({
           </button>
         </div>
 
-        <div className="max-h-[52vh] overflow-y-auto p-3 sm:p-4">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4">
           {tracks.length === 0 ? (
             <div className="surface rounded-xl border border-dashed border-cyan-100/25 p-4 text-sm text-cyan-100/65">
               {mode === 'add'
@@ -120,11 +120,11 @@ export const PlaylistSongsModal: React.FC<PlaylistSongsModalProps> = ({
           )}
         </div>
 
-        <div className="flex items-center justify-end gap-2.5 border-t border-cyan-100/10 p-4 sm:p-5">
+        <div className="flex flex-col-reverse gap-2.5 border-t border-cyan-100/10 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:flex-row sm:items-center sm:justify-end sm:p-5">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-cyan-100/80 transition hover:bg-white/10 hover:text-white"
+            className="w-full rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-cyan-100/80 transition hover:bg-white/10 hover:text-white sm:w-auto"
           >
             Cancel
           </button>
@@ -132,7 +132,7 @@ export const PlaylistSongsModal: React.FC<PlaylistSongsModalProps> = ({
             type="button"
             disabled={isSelectionEmpty}
             onClick={() => onSubmit(selectedTrackIds)}
-            className="rounded-lg border border-cyan-200/40 bg-cyan-300/15 px-4 py-2 text-sm font-semibold text-cyan-50 transition hover:border-cyan-200/60 hover:bg-cyan-300/25 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-lg border border-cyan-200/40 bg-cyan-300/15 px-4 py-2 text-sm font-semibold text-cyan-50 transition hover:border-cyan-200/60 hover:bg-cyan-300/25 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
           >
             {actionText}
           </button>

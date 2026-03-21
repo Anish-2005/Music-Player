@@ -27,6 +27,7 @@ interface HomeViewProps {
   sections: TrackSection[];
   currentTrackIndex: number;
   isPlaying: boolean;
+  isNowPlayingOpen: boolean;
   viewMode: 'grid' | 'list';
   likedTrackIds: Set<string>;
   libraryCount: number;
@@ -44,6 +45,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   sections,
   currentTrackIndex,
   isPlaying,
+  isNowPlayingOpen,
   viewMode,
   likedTrackIds,
   libraryCount,
@@ -63,7 +65,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
   );
 
   return (
-    <div className="mx-auto w-full max-w-[1680px] px-3 py-4 pb-[230px] sm:px-4 sm:py-6 sm:pb-[260px] md:pb-40 lg:px-8">
+    <div
+      className={`mx-auto w-full max-w-[1680px] px-3 py-4 sm:px-4 sm:py-6 lg:px-8 ${
+        isNowPlayingOpen ? 'pb-[230px] sm:pb-[260px] md:pb-40' : 'pb-20 sm:pb-24 md:pb-14'
+      }`}
+    >
       <section className="surface-strong relative overflow-hidden rounded-2xl p-4 sm:rounded-3xl sm:p-5 md:p-8">
         <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-amber-300/20 blur-3xl" />
@@ -134,31 +140,31 @@ export const HomeView: React.FC<HomeViewProps> = ({
           {sections.map((section) => {
             return (
               <div key={section.id}>
-                <div className="mb-2.5 flex items-end justify-between gap-3 sm:mb-3">
+                <div className="mb-2.5 flex flex-col items-start justify-between gap-2.5 sm:mb-3 sm:flex-row sm:items-end">
                   <div>
                     <h4 className="title-font text-lg font-semibold text-white sm:text-xl md:text-2xl">{section.title}</h4>
                     <p className="text-xs text-cyan-100/65 md:text-sm">{section.description}</p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
                     {section.editable && (
                       <>
                         <button
                           type="button"
                           onClick={section.onAddSongs}
-                          className="rounded-lg border border-cyan-200/30 bg-cyan-300/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-cyan-50 transition hover:bg-cyan-300/22 sm:text-xs"
+                          className="rounded-lg border border-cyan-200/30 bg-cyan-300/12 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-cyan-50 transition hover:bg-cyan-300/22 sm:text-xs"
                         >
                           Add Songs
                         </button>
                         <button
                           type="button"
                           onClick={section.onRemoveSongs}
-                          className="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-cyan-100/80 transition hover:bg-white/12 hover:text-white sm:text-xs"
+                          className="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-cyan-100/80 transition hover:bg-white/12 hover:text-white sm:text-xs"
                         >
                           Remove Songs
                         </button>
                       </>
                     )}
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-cyan-100/55 sm:text-xs">
+                    <span className="ml-auto text-[10px] font-semibold uppercase tracking-[0.1em] text-cyan-100/55 sm:ml-0 sm:text-xs">
                       {section.totalTracks ?? section.tracks.length} tracks
                     </span>
                   </div>

@@ -54,8 +54,8 @@ export const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[140] flex items-center justify-center bg-slate-950/75 p-3 backdrop-blur-sm sm:p-5">
-      <div className="surface-strong w-full max-w-md rounded-2xl border border-cyan-100/20 p-4 sm:p-6">
+    <div className="fixed inset-0 z-[140] flex items-end justify-center bg-slate-950/75 p-0 backdrop-blur-sm sm:items-center sm:p-5">
+      <div className="surface-strong w-full max-w-md rounded-t-2xl border border-cyan-100/20 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:rounded-2xl sm:p-6">
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-100/55">Playlist Builder</p>
@@ -94,17 +94,17 @@ export const CreatePlaylistModal: React.FC<CreatePlaylistModalProps> = ({
             The playlist will be created with your current listening context.
           </p>
 
-          <div className="mt-5 flex items-center justify-end gap-2.5">
+          <div className="mt-5 flex flex-col-reverse gap-2.5 sm:flex-row sm:items-center sm:justify-end">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-cyan-100/80 transition hover:bg-white/10 hover:text-white"
+              className="w-full rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-cyan-100/80 transition hover:bg-white/10 hover:text-white sm:w-auto"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-lg border border-cyan-200/40 bg-cyan-300/15 px-4 py-2 text-sm font-semibold text-cyan-50 transition hover:border-cyan-200/60 hover:bg-cyan-300/25"
+              className="w-full rounded-lg border border-cyan-200/40 bg-cyan-300/15 px-4 py-2 text-sm font-semibold text-cyan-50 transition hover:border-cyan-200/60 hover:bg-cyan-300/25 sm:w-auto"
             >
               Create Playlist
             </button>
