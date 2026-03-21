@@ -180,6 +180,7 @@ export const MusicPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useMusicPlayer = (): MusicPlayerContextType => {
   const context = useContext(MusicPlayerContext);
   if (!context) {

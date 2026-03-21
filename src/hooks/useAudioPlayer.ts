@@ -34,7 +34,7 @@ export const useAudioPlayer = ({
   useEffect(() => {
     const audio = new Audio();
     audio.preload = 'metadata'; // Preload only metadata for faster initial load
-    audio.volume = playerState.volume;
+    audio.volume = 1;
     audioRef.current = audio;
 
     // Event listeners
@@ -62,7 +62,7 @@ export const useAudioPlayer = ({
       audio.pause();
       audio.src = '';
     };
-  }, [onTimeUpdate, onDurationChange, onEnded, onCanPlay]);
+  }, [onTimeUpdate, onDurationChange, onEnded, onCanPlay, onBufferingStart, onBufferingEnd]);
 
   // Load track
   useEffect(() => {
