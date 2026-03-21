@@ -1,12 +1,15 @@
 import React from 'react';
-import { Home, Music2, ListMusic, Heart, History, Plus, X, Disc3 } from 'lucide-react';
+import { Home, Music2, ListMusic, Heart, History, Plus, X, Disc3, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { Track } from '@/types';
 
 interface SidebarProps {
   activeView: string;
   onViewChange: (view: string) => void;
+  onCreatePlaylist: () => void;
   isOpen: boolean;
   onClose: () => void;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
   counts: Record<string, number>;
   currentTrack: Track | null;
   isPlaying: boolean;
@@ -15,8 +18,11 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({
   activeView,
   onViewChange,
+  onCreatePlaylist,
   isOpen,
   onClose,
+  isCollapsed,
+  onToggleCollapse,
   counts,
   currentTrack,
   isPlaying,
@@ -40,29 +46,43 @@ export const Sidebar: React.FC<SidebarProps> = ({
       />
 
       <aside
-        className={`fixed left-0 top-0 z-50 flex h-[100dvh] w-[88vw] max-w-[300px] flex-col border-r border-cyan-100/15 bg-slate-950/80 shadow-2xl backdrop-blur-2xl transition-transform duration-300 lg:w-[272px] lg:max-w-none lg:translate-x-0 ${
+        className={`fixed left-0 top-0 z-50 flex h-[100dvh] w-[88vw] max-w-[300px] flex-col border-r border-cyan-100/15 bg-slate-950/80 shadow-2xl backdrop-blur-2xl transition-[transform,width] duration-300 ${
+          isCollapsed ? 'lg:w-[92px]' : 'lg:w-[272px]'
+        } lg:max-w-none lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         role="navigation"
         aria-label="Main navigation"
       >
         <div className="flex items-center justify-between border-b border-cyan-100/10 px-5 py-5">
-          <div className="flex items-center gap-3">
+          <div className={`flex items-center gap-3 ${isCollapsed ? 'lg:justify-center lg:gap-0' : ''}`}>
             <img src="/mm-logo.svg" alt="Music Maniac" className="h-10 w-10 rounded-lg object-contain" />
-            <div>
+            <div className={isCollapsed ? 'lg:hidden' : ''}>
               <p className="title-font text-base font-semibold text-white">Music Maniac</p>
               <p className="text-[11px] uppercase tracking-[0.14em] text-cyan-100/55">Studio Console</p>
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-cyan-100/65 transition hover:bg-white/10 hover:text-white lg:hidden"
-            aria-label="Close menu"
-          >
-            <X size={18} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              className="hidden h-9 w-9 items-center justify-center rounded-lg text-cyan-100/65 transition hover:bg-white/10 hover:text-white lg:inline-flex"
+              aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {isCollapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+            </button>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-cyan-100/65 transition hover:bg-white/10 hover:text-white lg:hidden"
+              aria-label="Close menu"
+            >
+              <X size={18} />
+            </button>
+          </div>
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-4">
@@ -76,14 +96,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 type="button"
                 onClick={() => onViewChange(item.id)}
                 className={`interactive-lift mb-1.5 flex w-full items-center gap-3 rounded-xl border px-3.5 py-3 text-left ${
+                  isCollapsed ? 'lg:justify-center lg:px-2.5' : ''
+                } ${
                   isActive
                     ? 'border-cyan-300/45 bg-cyan-300/16 text-white'
                     : 'border-transparent text-cyan-50/70 hover:bg-white/8 hover:text-white'
                 }`}
+                title={isCollapsed ? item.label : undefined}
               >
                 <Icon size={18} className={isActive ? 'text-cyan-200' : 'text-cyan-100/65'} />
-                <span className="text-sm font-semibold">{item.label}</span>
-                <span className="ml-auto rounded-full bg-white/8 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.07em] text-cyan-100/65">
+                <span className={`text-sm font-semibold ${isCollapsed ? 'lg:hidden' : ''}`}>{item.label}</span>
+                <span className={`ml-auto rounded-full bg-white/8 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.07em] text-cyan-100/65 ${isCollapsed ? 'lg:hidden' : ''}`}>
                   {counts[item.id] ?? 0}
                 </span>
               </button>
@@ -94,14 +117,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="space-y-3 border-t border-cyan-100/10 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
           <button
             type="button"
-            className="interactive-lift flex w-full items-center justify-center gap-2 rounded-xl border border-cyan-200/35 bg-cyan-400/12 px-3 py-3 text-sm font-semibold text-cyan-50"
+            onClick={onCreatePlaylist}
+            className={`interactive-lift flex w-full items-center justify-center gap-2 rounded-xl border border-cyan-200/35 bg-cyan-400/12 px-3 py-3 text-sm font-semibold text-cyan-50 ${
+              isCollapsed ? 'lg:px-0' : ''
+            }`}
+            title={isCollapsed ? 'Create Playlist' : undefined}
           >
             <Plus size={16} />
-            Create Playlist
+            <span className={isCollapsed ? 'lg:hidden' : ''}>Create Playlist</span>
           </button>
 
           {currentTrack && (
-            <div className="surface rounded-xl p-3">
+            <div className={`surface rounded-xl p-3 ${isCollapsed ? 'lg:hidden' : ''}`}>
               <p className="text-[10px] uppercase tracking-[0.14em] text-cyan-100/55">Now Playing</p>
               <div className="mt-2 flex items-center gap-2.5">
                 <img

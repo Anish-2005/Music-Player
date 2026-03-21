@@ -13,6 +13,10 @@ export interface TrackSection {
   title: string;
   description: string;
   tracks: IndexedTrack[];
+  totalTracks?: number;
+  editable?: boolean;
+  onAddSongs?: () => void;
+  onRemoveSongs?: () => void;
 }
 
 interface HomeViewProps {
@@ -128,8 +132,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
         <div className="space-y-6 sm:space-y-7">
           {sections.map((section) => {
-            if (section.tracks.length === 0) return null;
-
             return (
               <div key={section.id}>
                 <div className="mb-2.5 flex items-end justify-between gap-3 sm:mb-3">
@@ -137,31 +139,59 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     <h4 className="title-font text-lg font-semibold text-white sm:text-xl md:text-2xl">{section.title}</h4>
                     <p className="text-xs text-cyan-100/65 md:text-sm">{section.description}</p>
                   </div>
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-cyan-100/55 sm:text-xs">{section.tracks.length} tracks</span>
+                  <div className="flex items-center gap-2">
+                    {section.editable && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={section.onAddSongs}
+                          className="rounded-lg border border-cyan-200/30 bg-cyan-300/12 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-cyan-50 transition hover:bg-cyan-300/22 sm:text-xs"
+                        >
+                          Add Songs
+                        </button>
+                        <button
+                          type="button"
+                          onClick={section.onRemoveSongs}
+                          className="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-cyan-100/80 transition hover:bg-white/12 hover:text-white sm:text-xs"
+                        >
+                          Remove Songs
+                        </button>
+                      </>
+                    )}
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-cyan-100/55 sm:text-xs">
+                      {section.totalTracks ?? section.tracks.length} tracks
+                    </span>
+                  </div>
                 </div>
 
-                <div
-                  className={`stagger-children ${
-                    viewMode === 'grid'
-                      ? 'grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
-                      : 'flex flex-col gap-2'
-                  }`}
-                >
-                  {section.tracks.map(({ track, index }, sectionIndex) => (
-                    <TrackCard
-                      key={`${section.id}-${track.id}`}
-                      track={track}
-                      index={index}
-                      order={sectionIndex + 1}
-                      isPlaying={isPlaying}
-                      isCurrentTrack={currentTrackIndex === index}
-                      isLiked={likedTrackIds.has(track.id)}
-                      layout={viewMode}
-                      onPlay={onSelectTrack}
-                      onToggleLike={onToggleLike}
-                    />
-                  ))}
-                </div>
+                {section.tracks.length === 0 ? (
+                  <div className="surface rounded-xl border border-dashed border-cyan-100/25 p-5 text-xs text-cyan-100/65">
+                    No tracks in this playlist yet. Use Add Songs to include tracks.
+                  </div>
+                ) : (
+                  <div
+                    className={`stagger-children ${
+                      viewMode === 'grid'
+                        ? 'grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
+                        : 'flex flex-col gap-2'
+                    }`}
+                  >
+                    {section.tracks.map(({ track, index }, sectionIndex) => (
+                      <TrackCard
+                        key={`${section.id}-${track.id}`}
+                        track={track}
+                        index={index}
+                        order={sectionIndex + 1}
+                        isPlaying={isPlaying}
+                        isCurrentTrack={currentTrackIndex === index}
+                        isLiked={likedTrackIds.has(track.id)}
+                        layout={viewMode}
+                        onPlay={onSelectTrack}
+                        onToggleLike={onToggleLike}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}

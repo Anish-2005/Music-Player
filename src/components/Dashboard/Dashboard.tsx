@@ -5,16 +5,35 @@ import { Sidebar } from '@/components/Sidebar/Sidebar';
 import { Header } from '@/components/Header/Header';
 import { HomeView, IndexedTrack, TrackSection } from '@/components/HomeView/HomeView';
 import { NowPlayingBar } from '@/components/NowPlayingBar/NowPlayingBar';
+import { CreatePlaylistModal } from '@/components/CreatePlaylistModal/CreatePlaylistModal';
+import { PlaylistSongsModal } from '@/components/PlaylistSongsModal/PlaylistSongsModal';
 import { getStorageItem, setStorageItem } from '@/utils/helpers';
 
 type ViewId = 'home' | 'library' | 'playlists' | 'favorites' | 'recent';
 
 type ViewMode = 'grid' | 'list';
 
+interface UserPlaylist {
+  id: string;
+  name: string;
+  trackIds: string[];
+  createdAt: string;
+}
+
+type PlaylistEditorMode = 'add' | 'remove';
+
+interface PlaylistEditorState {
+  isOpen: boolean;
+  playlistId: string | null;
+  mode: PlaylistEditorMode;
+}
+
 const STORAGE_KEYS = {
   viewMode: 'musicPlayer_viewMode',
+  sidebarCollapsed: 'musicPlayer_sidebarCollapsed',
   likedTrackIds: 'musicPlayer_likedTrackIds',
   recentTrackIds: 'musicPlayer_recentTrackIds',
+  customPlaylists: 'musicPlayer_customPlaylists',
 } as const;
 
 const VIEW_LABELS: Record<ViewId, string> = {
@@ -38,13 +57,26 @@ export const Dashboard: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewId>('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() =>
+    getStorageItem(STORAGE_KEYS.sidebarCollapsed, false)
+  );
   const [isNowPlayingOpen, setIsNowPlayingOpen] = useState(true);
+  const [isCreatePlaylistModalOpen, setIsCreatePlaylistModalOpen] = useState(false);
+  const [suggestedPlaylistName, setSuggestedPlaylistName] = useState('');
+  const [playlistEditor, setPlaylistEditor] = useState<PlaylistEditorState>({
+    isOpen: false,
+    playlistId: null,
+    mode: 'add',
+  });
   const [viewMode, setViewMode] = useState<ViewMode>(() => getStorageItem(STORAGE_KEYS.viewMode, 'grid'));
   const [likedTrackIds, setLikedTrackIds] = useState<string[]>(() =>
     getStorageItem(STORAGE_KEYS.likedTrackIds, [])
   );
   const [recentTrackIds, setRecentTrackIds] = useState<string[]>(() =>
     getStorageItem(STORAGE_KEYS.recentTrackIds, [])
+  );
+  const [customPlaylists, setCustomPlaylists] = useState<UserPlaylist[]>(() =>
+    getStorageItem(STORAGE_KEYS.customPlaylists, [])
   );
 
   const { playerState, playlistState, currentTrack, audioControls } = useMusicPlayer();
@@ -75,6 +107,14 @@ export const Dashboard: React.FC = () => {
         .filter((entry): entry is IndexedTrack => Boolean(entry)),
     [recentTrackIds, trackById]
   );
+
+  const openPlaylistEditor = useCallback((playlistId: string, mode: PlaylistEditorMode) => {
+    setPlaylistEditor({
+      isOpen: true,
+      playlistId,
+      mode,
+    });
+  }, []);
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
@@ -111,7 +151,24 @@ export const Dashboard: React.FC = () => {
           },
         ];
 
-    const playlistSections: TrackSection[] = [
+    const customPlaylistSections: TrackSection[] = customPlaylists.map((playlist) => {
+      const playlistTracks = playlist.trackIds
+          .map((trackId) => trackById.get(trackId))
+          .filter((entry): entry is IndexedTrack => Boolean(entry));
+      return {
+        id: `playlist-user-${playlist.id}`,
+        title: playlist.name,
+        description: `${playlistTracks.length} ${playlistTracks.length === 1 ? 'track' : 'tracks'}`,
+        tracks: withSearch(playlistTracks),
+        totalTracks: playlistTracks.length,
+        editable: true,
+        onAddSongs: () => openPlaylistEditor(playlist.id, 'add'),
+        onRemoveSongs: () => openPlaylistEditor(playlist.id, 'remove'),
+      };
+    });
+
+    const curatedPlaylistSections: TrackSection[] = [
+      ...customPlaylistSections,
       {
         id: 'playlist-cinematic',
         title: 'Cinematic Hits',
@@ -130,7 +187,9 @@ export const Dashboard: React.FC = () => {
         description: 'Low-key rhythm and smooth pacing.',
         tracks: withSearch(allEntries.filter((_, index) => index % 2 !== 0).slice(0, 8)),
       },
-    ].filter((section) => section.tracks.length > 0);
+    ].filter((section) => !section.editable && section.tracks.length > 0);
+
+    const playlistSections: TrackSection[] = [...customPlaylistSections, ...curatedPlaylistSections];
 
     switch (activeView) {
       case 'library':
@@ -153,7 +212,7 @@ export const Dashboard: React.FC = () => {
           pageTitle: 'Playlists',
           pageDescription: 'Curated sets for different moods and sessions.',
           highlightTitle: 'Curated Playlist Sessions',
-          highlightSubtitle: 'Move quickly between thematic mixes without losing playback context.',
+          highlightSubtitle: 'Move quickly between your own playlists and curated mixes without losing playback context.',
           sections: playlistSections,
         };
       case 'favorites':
@@ -195,7 +254,7 @@ export const Dashboard: React.FC = () => {
           sections: homeSections,
         };
     }
-  }, [activeView, allEntries, likedEntries, normalizedQuery, recentEntries, searchQuery]);
+  }, [activeView, allEntries, customPlaylists, likedEntries, normalizedQuery, openPlaylistEditor, recentEntries, searchQuery, trackById]);
 
   const totalTracksInView = useMemo(
     () => pageContent.sections.reduce((total, section) => total + section.tracks.length, 0),
@@ -208,11 +267,11 @@ export const Dashboard: React.FC = () => {
     () => ({
       home: allEntries.length,
       library: allEntries.length,
-      playlists: 3,
+      playlists: 3 + customPlaylists.length,
       favorites: likedEntries.length,
       recent: recentEntries.length,
     }),
-    [allEntries.length, likedEntries.length, recentEntries.length]
+    [allEntries.length, customPlaylists.length, likedEntries.length, recentEntries.length]
   );
 
   const toggleTrackLike = useCallback((trackId: string) => {
@@ -232,9 +291,90 @@ export const Dashboard: React.FC = () => {
     [selectTrack]
   );
 
+  const handleOpenCreatePlaylist = useCallback(() => {
+    const nextDefaultName = `My Playlist ${customPlaylists.length + 1}`;
+    setSuggestedPlaylistName(nextDefaultName);
+    setIsCreatePlaylistModalOpen(true);
+  }, [customPlaylists.length]);
+
+  const handleCreatePlaylist = useCallback(
+    (playlistName: string) => {
+      const starterTrackId = currentTrack?.id ?? likedTrackIds[0] ?? recentTrackIds[0] ?? allEntries[0]?.track.id;
+      if (!starterTrackId) return;
+
+      const playlist: UserPlaylist = {
+        id: `${Date.now()}`,
+        name: playlistName,
+        trackIds: [starterTrackId],
+        createdAt: new Date().toISOString(),
+      };
+
+      setCustomPlaylists((previous) => [playlist, ...previous]);
+      setActiveView('playlists');
+      setIsSidebarOpen(false);
+      setIsCreatePlaylistModalOpen(false);
+    },
+    [allEntries, currentTrack?.id, likedTrackIds, recentTrackIds]
+  );
+
+  const selectedEditorPlaylist = useMemo(
+    () => customPlaylists.find((playlist) => playlist.id === playlistEditor.playlistId) ?? null,
+    [customPlaylists, playlistEditor.playlistId]
+  );
+
+  const playlistEditorTracks = useMemo(() => {
+    if (!selectedEditorPlaylist) return [];
+
+    const currentTrackIdSet = new Set(selectedEditorPlaylist.trackIds);
+
+    if (playlistEditor.mode === 'add') {
+      return allEntries.filter((entry) => !currentTrackIdSet.has(entry.track.id));
+    }
+
+    return selectedEditorPlaylist.trackIds
+      .map((trackId) => trackById.get(trackId))
+      .filter((entry): entry is IndexedTrack => Boolean(entry));
+  }, [allEntries, playlistEditor.mode, selectedEditorPlaylist, trackById]);
+
+  const handleSubmitPlaylistSongs = useCallback(
+    (trackIds: string[]) => {
+      if (!playlistEditor.playlistId || trackIds.length === 0) {
+        setPlaylistEditor((previous) => ({ ...previous, isOpen: false }));
+        return;
+      }
+
+      setCustomPlaylists((previousPlaylists) =>
+        previousPlaylists.map((playlist) => {
+          if (playlist.id !== playlistEditor.playlistId) return playlist;
+
+          if (playlistEditor.mode === 'add') {
+            const existingTrackIds = new Set(playlist.trackIds);
+            return {
+              ...playlist,
+              trackIds: [...playlist.trackIds, ...trackIds.filter((trackId) => !existingTrackIds.has(trackId))],
+            };
+          }
+
+          const tracksToRemove = new Set(trackIds);
+          return {
+            ...playlist,
+            trackIds: playlist.trackIds.filter((trackId) => !tracksToRemove.has(trackId)),
+          };
+        })
+      );
+
+      setPlaylistEditor((previous) => ({ ...previous, isOpen: false }));
+    },
+    [playlistEditor.mode, playlistEditor.playlistId]
+  );
+
   useEffect(() => {
     setStorageItem(STORAGE_KEYS.viewMode, viewMode);
   }, [viewMode]);
+
+  useEffect(() => {
+    setStorageItem(STORAGE_KEYS.sidebarCollapsed, isSidebarCollapsed);
+  }, [isSidebarCollapsed]);
 
   useEffect(() => {
     setStorageItem(STORAGE_KEYS.likedTrackIds, likedTrackIds);
@@ -243,6 +383,10 @@ export const Dashboard: React.FC = () => {
   useEffect(() => {
     setStorageItem(STORAGE_KEYS.recentTrackIds, recentTrackIds);
   }, [recentTrackIds]);
+
+  useEffect(() => {
+    setStorageItem(STORAGE_KEYS.customPlaylists, customPlaylists);
+  }, [customPlaylists]);
 
   useEffect(() => {
     if (!currentTrack?.id) return;
@@ -296,14 +440,21 @@ export const Dashboard: React.FC = () => {
           setActiveView(view as ViewId);
           setIsSidebarOpen(false);
         }}
+        onCreatePlaylist={handleOpenCreatePlaylist}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={() => setIsSidebarCollapsed((previous) => !previous)}
         counts={sidebarCounts}
         currentTrack={currentTrack}
         isPlaying={playerState.isPlaying}
       />
 
-      <main className="min-h-screen lg:pl-[272px]">
+      <main
+        className={`min-h-screen transition-[padding] duration-300 ${
+          isSidebarCollapsed ? 'lg:pl-[92px]' : 'lg:pl-[272px]'
+        }`}
+      >
         <Header
           onSearch={setSearchQuery}
           onMenuClick={() => setIsSidebarOpen(true)}
@@ -364,6 +515,22 @@ export const Dashboard: React.FC = () => {
           Now Playing
         </button>
       )}
+
+      <CreatePlaylistModal
+        isOpen={isCreatePlaylistModalOpen}
+        suggestedName={suggestedPlaylistName}
+        onClose={() => setIsCreatePlaylistModalOpen(false)}
+        onCreate={handleCreatePlaylist}
+      />
+
+      <PlaylistSongsModal
+        isOpen={playlistEditor.isOpen}
+        mode={playlistEditor.mode}
+        playlistName={selectedEditorPlaylist?.name ?? 'Playlist'}
+        tracks={playlistEditorTracks}
+        onClose={() => setPlaylistEditor((previous) => ({ ...previous, isOpen: false }))}
+        onSubmit={handleSubmitPlaylistSongs}
+      />
     </div>
   );
 };
