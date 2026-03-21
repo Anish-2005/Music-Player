@@ -40,7 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       />
 
       <aside
-        className={`fixed left-0 top-0 z-50 flex h-screen w-[272px] flex-col border-r border-cyan-100/15 bg-slate-950/80 shadow-2xl backdrop-blur-2xl transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed left-0 top-0 z-50 flex h-[100dvh] w-[88vw] max-w-[300px] flex-col border-r border-cyan-100/15 bg-slate-950/80 shadow-2xl backdrop-blur-2xl transition-transform duration-300 lg:w-[272px] lg:max-w-none lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         role="navigation"
@@ -91,7 +91,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           })}
         </nav>
 
-        <div className="space-y-3 border-t border-cyan-100/10 p-4">
+        <div className="space-y-3 border-t border-cyan-100/10 p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
           <button
             type="button"
             className="interactive-lift flex w-full items-center justify-center gap-2 rounded-xl border border-cyan-200/35 bg-cyan-400/12 px-3 py-3 text-sm font-semibold text-cyan-50"

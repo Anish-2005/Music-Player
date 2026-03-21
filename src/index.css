@@ -42,7 +42,7 @@
   body {
     margin: 0;
     min-width: 320px;
-    min-height: 100vh;
+    min-height: 100dvh;
     font-family: 'Manrope', 'Segoe UI', sans-serif;
     color: var(--text-primary);
     background:
@@ -53,6 +53,8 @@
     background-attachment: fixed;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
   }
 
   #root {
@@ -195,6 +197,23 @@
 
   .stagger-children > *:nth-child(5) {
     animation-delay: 300ms;
+  }
+}
+
+@media (pointer: coarse) {
+  .interactive-lift:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .player-range::-webkit-slider-thumb {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .player-range::-moz-range-thumb {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 

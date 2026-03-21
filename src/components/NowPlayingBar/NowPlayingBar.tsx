@@ -64,12 +64,127 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[90] border-t border-cyan-100/20 bg-slate-950/92 backdrop-blur-2xl">
-      <div className="mx-auto grid w-full max-w-[1680px] grid-cols-1 gap-3 px-4 py-3 md:grid-cols-[minmax(220px,1fr)_minmax(340px,1.7fr)_minmax(220px,1fr)] md:items-center md:gap-6 md:px-8">
-        <div className="flex min-w-0 items-center gap-3">
-          <img src={track.albumArt} alt={track.name} className="h-12 w-12 rounded-xl object-cover md:h-14 md:w-14" />
+      <div className="mx-auto w-full max-w-[1680px] px-3 pb-[max(0.7rem,env(safe-area-inset-bottom))] pt-2.5 sm:px-4 md:hidden">
+        <div className="flex items-center gap-2.5">
+          <img src={track.albumArt} alt={track.name} className="h-10 w-10 rounded-lg object-cover" />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-white md:text-base">{track.name}</p>
-            <p className="truncate text-xs text-cyan-100/60 md:text-sm">{track.artist}</p>
+            <p className="truncate text-xs font-semibold text-white">{track.name}</p>
+            <p className="truncate text-[11px] text-cyan-100/60">{track.artist}</p>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span className="inline-flex items-center gap-1 rounded-full border border-white/12 bg-white/5 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-cyan-100/65">
+              <Radio size={10} />
+              {queueCount}
+            </span>
+            <button
+              type="button"
+              onClick={onToggleLike}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cyan-100/70 transition hover:bg-white/10 hover:text-cyan-100"
+              aria-label={isLiked ? 'Remove from liked songs' : 'Add to liked songs'}
+            >
+              <Heart size={16} className={isLiked ? 'fill-amber-300 text-amber-300' : ''} />
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-2.5 flex items-center gap-2">
+          <span className="w-9 text-right text-[10px] font-semibold tabular-nums text-cyan-100/60">
+            {formatTime(playerState.currentTime)}
+          </span>
+          <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+            <div
+              className="pointer-events-none absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-cyan-300 via-sky-300 to-amber-200"
+              style={{ width: `${progress}%` }}
+            />
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={progress}
+              onChange={handleSeek}
+              className="player-range absolute inset-0"
+              aria-label="Seek"
+            />
+          </div>
+          <span className="w-9 text-[10px] font-semibold tabular-nums text-cyan-100/60">{formatTime(playerState.duration)}</span>
+        </div>
+
+        <div className="mt-2.5 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={onPrevious}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-cyan-100/75 transition hover:bg-white/10 hover:text-white"
+              aria-label="Previous track"
+            >
+              <SkipBack size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={onPlayPause}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-cyan-300 text-slate-950 shadow-lg shadow-cyan-300/25 transition active:scale-[0.98]"
+              aria-label={playerState.isPlaying ? 'Pause' : 'Play'}
+            >
+              {playerState.isBuffering ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : playerState.isPlaying ? (
+                <Pause size={20} />
+              ) : (
+                <Play size={20} className="translate-x-[1px]" />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={onNext}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-cyan-100/75 transition hover:bg-white/10 hover:text-white"
+              aria-label="Next track"
+            >
+              <SkipForward size={18} />
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={onToggleShuffle}
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-full transition ${
+                playerState.isShuffleOn ? 'bg-cyan-300/22 text-cyan-100' : 'text-cyan-100/65 hover:bg-white/10 hover:text-white'
+              }`}
+              aria-label="Toggle shuffle"
+            >
+              <Shuffle size={15} />
+            </button>
+            <button
+              type="button"
+              onClick={onToggleRepeat}
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-full transition ${
+                playerState.repeatMode !== RepeatMode.OFF
+                  ? 'bg-cyan-300/22 text-cyan-100'
+                  : 'text-cyan-100/65 hover:bg-white/10 hover:text-white'
+              }`}
+              aria-label="Toggle repeat"
+            >
+              <RepeatIcon size={15} />
+            </button>
+            <button
+              type="button"
+              onClick={onToggleMute}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cyan-100/75 transition hover:bg-white/10 hover:text-white"
+              aria-label={playerState.isMuted ? 'Unmute' : 'Mute'}
+            >
+              <VolumeIcon size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto hidden w-full max-w-[1680px] grid-cols-[minmax(220px,1fr)_minmax(340px,1.7fr)_minmax(220px,1fr)] items-center gap-6 px-8 py-3 md:grid">
+        <div className="flex min-w-0 items-center gap-3">
+          <img src={track.albumArt} alt={track.name} className="h-14 w-14 rounded-xl object-cover" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-base font-semibold text-white">{track.name}</p>
+            <p className="truncate text-sm text-cyan-100/60">{track.artist}</p>
           </div>
           <button
             type="button"
@@ -82,7 +197,7 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
         </div>
 
         <div className="flex flex-col gap-2.5">
-          <div className="flex items-center justify-center gap-1.5 md:gap-2.5">
+          <div className="flex items-center justify-center gap-2.5">
             <button
               type="button"
               onClick={onToggleShuffle}
@@ -137,11 +252,11 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
             </button>
           </div>
 
-          <div className="flex items-center gap-2 md:gap-3">
-            <span className="w-10 text-right text-[10px] font-semibold tabular-nums text-cyan-100/60 md:text-xs">
+          <div className="flex items-center gap-3">
+            <span className="w-10 text-right text-xs font-semibold tabular-nums text-cyan-100/60">
               {formatTime(playerState.currentTime)}
             </span>
-            <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-white/10 md:h-2">
+            <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-white/10">
               <div
                 className="pointer-events-none absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-cyan-300 via-sky-300 to-amber-200"
                 style={{ width: `${progress}%` }}
@@ -156,19 +271,17 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
                 aria-label="Seek"
               />
             </div>
-            <span className="w-10 text-[10px] font-semibold tabular-nums text-cyan-100/60 md:text-xs">
-              {formatTime(playerState.duration)}
-            </span>
+            <span className="w-10 text-xs font-semibold tabular-nums text-cyan-100/60">{formatTime(playerState.duration)}</span>
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-3 md:justify-end">
-          <div className="hidden items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-cyan-100/60 md:inline-flex">
+        <div className="flex items-center justify-end gap-3">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-cyan-100/60">
             <Radio size={12} />
             Queue {queueCount}
           </div>
 
-          <div className="flex items-center gap-2 md:min-w-[148px]">
+          <div className="flex items-center gap-2 min-w-[148px]">
             <button
               type="button"
               onClick={onToggleMute}
@@ -177,7 +290,7 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
             >
               <VolumeIcon size={17} />
             </button>
-            <div className="relative h-1.5 w-28 overflow-hidden rounded-full bg-white/10 md:h-2 md:w-32">
+            <div className="relative h-2 w-32 overflow-hidden rounded-full bg-white/10">
               <div
                 className="pointer-events-none absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-cyan-300 to-sky-200"
                 style={{ width: `${playerState.isMuted ? 0 : playerState.volume * 100}%` }}

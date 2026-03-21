@@ -59,16 +59,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
   );
 
   return (
-    <div className="mx-auto w-full max-w-[1680px] px-4 py-6 pb-36 lg:px-8">
-      <section className="surface-strong relative overflow-hidden rounded-3xl p-5 md:p-8">
+    <div className="mx-auto w-full max-w-[1680px] px-3 py-4 pb-[230px] sm:px-4 sm:py-6 sm:pb-[260px] md:pb-40 lg:px-8">
+      <section className="surface-strong relative overflow-hidden rounded-2xl p-4 sm:rounded-3xl sm:p-5 md:p-8">
         <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-amber-300/20 blur-3xl" />
 
-        <div className="relative z-10 flex flex-wrap items-start justify-between gap-5">
+        <div className="relative z-10 flex flex-wrap items-start justify-between gap-4 sm:gap-5">
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-100/55">Refined Listening Experience</p>
-            <h2 className="title-font mt-3 text-3xl font-semibold text-white md:text-5xl">{highlightTitle}</h2>
-            <p className="mt-2 max-w-3xl text-sm text-cyan-100/70 md:text-base">{highlightSubtitle}</p>
+            <h2 className="title-font mt-2 text-2xl font-semibold text-white sm:mt-3 sm:text-3xl md:text-5xl">{highlightTitle}</h2>
+            <p className="mt-2 max-w-3xl text-xs text-cyan-100/70 sm:text-sm md:text-base">{highlightSubtitle}</p>
           </div>
 
           <button
@@ -79,42 +79,42 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 onSelectTrack(firstPlayableTrack.index);
               }
             }}
-            className="interactive-lift inline-flex h-11 items-center gap-2 rounded-xl border border-cyan-200/40 bg-cyan-300/15 px-4 text-sm font-semibold text-cyan-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="interactive-lift inline-flex h-10 items-center gap-2 rounded-xl border border-cyan-200/40 bg-cyan-300/15 px-3.5 text-xs font-semibold text-cyan-50 disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:px-4 sm:text-sm"
           >
-            <PlayCircle size={18} />
+            <PlayCircle size={16} className="sm:h-[18px] sm:w-[18px]" />
             Play Featured
           </button>
         </div>
 
-        <div className="relative z-10 mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="relative z-10 mt-5 grid grid-cols-2 gap-2.5 sm:mt-6 sm:gap-3 lg:grid-cols-3">
           <div className="surface rounded-2xl p-3">
             <div className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-cyan-100/55">
               <Library size={14} /> Library
             </div>
-            <p className="mt-1.5 text-2xl font-semibold text-white">{libraryCount}</p>
+            <p className="mt-1.5 text-xl font-semibold text-white sm:text-2xl">{libraryCount}</p>
           </div>
           <div className="surface rounded-2xl p-3">
             <div className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-cyan-100/55">
               <Heart size={14} /> Liked
             </div>
-            <p className="mt-1.5 text-2xl font-semibold text-white">{likedCount}</p>
+            <p className="mt-1.5 text-xl font-semibold text-white sm:text-2xl">{likedCount}</p>
           </div>
-          <div className="surface rounded-2xl p-3">
+          <div className="surface col-span-2 rounded-2xl p-3 lg:col-span-1">
             <div className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-cyan-100/55">
               <Clock3 size={14} /> Recent
             </div>
-            <p className="mt-1.5 text-2xl font-semibold text-white">{recentCount}</p>
+            <p className="mt-1.5 text-xl font-semibold text-white sm:text-2xl">{recentCount}</p>
           </div>
         </div>
       </section>
 
-      <section className="mt-8">
-        <div className="mb-5 flex items-end justify-between gap-3">
+      <section className="mt-6 sm:mt-8">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3 sm:mb-5">
           <div>
-            <h3 className="title-font text-2xl font-semibold text-white md:text-3xl">{pageTitle}</h3>
-            <p className="text-sm text-cyan-100/65">{pageDescription}</p>
+            <h3 className="title-font text-xl font-semibold text-white sm:text-2xl md:text-3xl">{pageTitle}</h3>
+            <p className="text-xs text-cyan-100/65 sm:text-sm">{pageDescription}</p>
           </div>
-          <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.1em] text-cyan-100/65">
+          <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-cyan-100/65 sm:text-xs">
             {totalTracksVisible} visible
           </span>
         </div>
@@ -126,24 +126,24 @@ export const HomeView: React.FC<HomeViewProps> = ({
           </div>
         )}
 
-        <div className="space-y-7">
+        <div className="space-y-6 sm:space-y-7">
           {sections.map((section) => {
             if (section.tracks.length === 0) return null;
 
             return (
               <div key={section.id}>
-                <div className="mb-3 flex items-end justify-between gap-3">
+                <div className="mb-2.5 flex items-end justify-between gap-3 sm:mb-3">
                   <div>
-                    <h4 className="title-font text-xl font-semibold text-white md:text-2xl">{section.title}</h4>
+                    <h4 className="title-font text-lg font-semibold text-white sm:text-xl md:text-2xl">{section.title}</h4>
                     <p className="text-xs text-cyan-100/65 md:text-sm">{section.description}</p>
                   </div>
-                  <span className="text-xs font-semibold uppercase tracking-[0.1em] text-cyan-100/55">{section.tracks.length} tracks</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-cyan-100/55 sm:text-xs">{section.tracks.length} tracks</span>
                 </div>
 
                 <div
                   className={`stagger-children ${
                     viewMode === 'grid'
-                      ? 'grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
+                      ? 'grid grid-cols-1 gap-2.5 min-[430px]:grid-cols-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
                       : 'flex flex-col gap-2'
                   }`}
                 >

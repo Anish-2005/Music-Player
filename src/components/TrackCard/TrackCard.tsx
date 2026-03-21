@@ -46,21 +46,25 @@ export const TrackCard: React.FC<TrackCardProps> = ({
             handleClick();
           }
         }}
-        className={`interactive-lift surface flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-2.5 md:px-4 md:py-3 ${
+        className={`interactive-lift surface flex cursor-pointer items-center gap-2.5 rounded-xl border px-2.5 py-2.5 min-[390px]:gap-3 min-[390px]:px-3 md:px-4 md:py-3 ${
           isCurrentTrack ? 'border-cyan-200/55 bg-cyan-300/14' : 'border-white/8'
         }`}
       >
-        <span className="w-7 text-center text-xs font-semibold text-cyan-100/60">{order}</span>
+        <span className="hidden w-7 text-center text-xs font-semibold text-cyan-100/60 min-[390px]:inline">{order}</span>
 
-        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-slate-900/65 md:h-14 md:w-14">
+        <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-slate-900/65 min-[390px]:h-12 min-[390px]:w-12 md:h-14 md:w-14">
           <img src={track.albumArt} alt={track.name} className="h-full w-full object-cover" loading="lazy" />
           <div className="absolute inset-0 flex items-center justify-center bg-slate-900/55">
-            {isCurrentTrack && isPlaying ? <Pause size={18} className="text-white" /> : <Play size={18} className="text-white" />}
+            {isCurrentTrack && isPlaying ? (
+              <Pause size={16} className="text-white min-[390px]:h-[18px] min-[390px]:w-[18px]" />
+            ) : (
+              <Play size={16} className="text-white min-[390px]:h-[18px] min-[390px]:w-[18px]" />
+            )}
           </div>
         </div>
 
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-sm font-semibold text-white md:text-base">{track.name}</h3>
+          <h3 className="truncate text-xs font-semibold text-white min-[390px]:text-sm md:text-base">{track.name}</h3>
           <p className="truncate text-xs text-cyan-100/60 md:text-sm">{track.artist}</p>
         </div>
 
@@ -75,7 +79,7 @@ export const TrackCard: React.FC<TrackCardProps> = ({
         <button
           type="button"
           onClick={handleLikeClick}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cyan-100/70 transition hover:bg-white/10 hover:text-cyan-100"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cyan-100/70 transition hover:bg-white/10 hover:text-cyan-100"
           aria-label={isLiked ? 'Remove from liked songs' : 'Add to liked songs'}
         >
           <Heart size={16} className={isLiked ? 'fill-amber-300 text-amber-300' : ''} />
@@ -95,14 +99,14 @@ export const TrackCard: React.FC<TrackCardProps> = ({
           handleClick();
         }
       }}
-      className={`interactive-lift surface group relative cursor-pointer rounded-2xl border p-3 sm:p-4 ${
+      className={`interactive-lift surface group relative cursor-pointer rounded-2xl border p-2.5 min-[390px]:p-3 sm:p-4 ${
         isCurrentTrack ? 'border-cyan-200/55 bg-cyan-300/12' : 'border-white/8'
       }`}
     >
       <button
         type="button"
         onClick={handleLikeClick}
-        className="absolute right-3 top-3 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-slate-950/45 text-cyan-100/70 transition hover:border-cyan-200/45 hover:text-cyan-100"
+        className="absolute right-2.5 top-2.5 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-slate-950/45 text-cyan-100/70 transition hover:border-cyan-200/45 hover:text-cyan-100 sm:right-3 sm:top-3 sm:h-8 sm:w-8"
         aria-label={isLiked ? 'Remove from liked songs' : 'Add to liked songs'}
       >
         <Heart size={15} className={isLiked ? 'fill-amber-300 text-amber-300' : ''} />
@@ -122,7 +126,7 @@ export const TrackCard: React.FC<TrackCardProps> = ({
           Track {order}
         </div>
 
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 group-hover:opacity-100">
+        <div className="absolute inset-0 flex items-center justify-center opacity-100 transition duration-300 sm:opacity-0 sm:group-hover:opacity-100">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-cyan-300/85 text-slate-950 shadow-xl shadow-cyan-300/30">
             {isCurrentTrack && isPlaying ? <Pause size={20} /> : <Play size={20} />}
           </div>
