@@ -48,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         <div className="flex items-center justify-between border-b border-cyan-100/10 px-5 py-5">
           <div className="flex items-center gap-3">
-            <img src="/mm-logo.png" alt="Music Maniac" className="h-10 w-10 rounded-lg object-cover" />
+            <img src="/mm-logo.svg" alt="Music Maniac" className="h-10 w-10 rounded-lg object-contain" />
             <div>
               <p className="title-font text-base font-semibold text-white">Music Maniac</p>
               <p className="text-[11px] uppercase tracking-[0.14em] text-cyan-100/55">Studio Console</p>

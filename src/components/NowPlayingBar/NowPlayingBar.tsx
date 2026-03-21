@@ -12,6 +12,7 @@ import {
   Heart,
   Loader2,
   Radio,
+  X,
 } from 'lucide-react';
 import { Track, PlayerState, RepeatMode } from '@/types';
 import { formatTime } from '@/utils/helpers';
@@ -30,6 +31,7 @@ interface NowPlayingBarProps {
   onToggleRepeat: () => void;
   onToggleShuffle: () => void;
   onToggleLike: () => void;
+  onClose: () => void;
 }
 
 export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
@@ -46,6 +48,7 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
   onToggleRepeat,
   onToggleShuffle,
   onToggleLike,
+  onClose,
 }) => {
   if (!track) return null;
 
@@ -84,6 +87,14 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
               aria-label={isLiked ? 'Remove from liked songs' : 'Add to liked songs'}
             >
               <Heart size={16} className={isLiked ? 'fill-amber-300 text-amber-300' : ''} />
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cyan-100/70 transition hover:bg-white/10 hover:text-white"
+              aria-label="Close now playing"
+            >
+              <X size={16} />
             </button>
           </div>
         </div>
@@ -306,6 +317,14 @@ export const NowPlayingBar: React.FC<NowPlayingBarProps> = ({
               />
             </div>
           </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cyan-100/70 transition hover:bg-white/10 hover:text-white"
+            aria-label="Close now playing"
+          >
+            <X size={17} />
+          </button>
         </div>
       </div>
     </div>

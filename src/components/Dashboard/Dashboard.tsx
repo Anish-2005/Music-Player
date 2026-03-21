@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Music2 } from 'lucide-react';
 import { useMusicPlayer } from '@/context/MusicPlayerContext';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
 import { Header } from '@/components/Header/Header';
@@ -37,6 +38,7 @@ export const Dashboard: React.FC = () => {
   const [activeView, setActiveView] = useState<ViewId>('home');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isNowPlayingOpen, setIsNowPlayingOpen] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>(() => getStorageItem(STORAGE_KEYS.viewMode, 'grid'));
   const [likedTrackIds, setLikedTrackIds] = useState<string[]>(() =>
     getStorageItem(STORAGE_KEYS.likedTrackIds, [])
@@ -46,7 +48,7 @@ export const Dashboard: React.FC = () => {
   );
 
   const { playerState, playlistState, currentTrack, audioControls } = useMusicPlayer();
-  const { togglePlayPause, seek } = audioControls;
+  const { togglePlayPause, seek, selectTrack } = audioControls;
 
   const allEntries = useMemo<IndexedTrack[]>(
     () => playlistState.tracks.map((track, index) => ({ track, index })),
@@ -222,6 +224,14 @@ export const Dashboard: React.FC = () => {
     });
   }, []);
 
+  const handleSelectTrack = useCallback(
+    (index: number) => {
+      setIsNowPlayingOpen(true);
+      selectTrack(index);
+    },
+    [selectTrack]
+  );
+
   useEffect(() => {
     setStorageItem(STORAGE_KEYS.viewMode, viewMode);
   }, [viewMode]);
@@ -256,6 +266,7 @@ export const Dashboard: React.FC = () => {
 
       if (event.code === 'Space') {
         event.preventDefault();
+        setIsNowPlayingOpen(true);
         void togglePlayPause();
       }
 
@@ -315,30 +326,44 @@ export const Dashboard: React.FC = () => {
           libraryCount={allEntries.length}
           likedCount={likedEntries.length}
           recentCount={recentEntries.length}
-          onSelectTrack={audioControls.selectTrack}
+          onSelectTrack={handleSelectTrack}
           onToggleLike={toggleTrackLike}
         />
       </main>
 
-      <NowPlayingBar
-        track={currentTrack}
-        playerState={playerState}
-        isLiked={currentTrackLiked}
-        queueCount={playlistState.tracks.length}
-        onPlayPause={audioControls.togglePlayPause}
-        onNext={audioControls.nextTrack}
-        onPrevious={audioControls.previousTrack}
-        onSeek={audioControls.seek}
-        onVolumeChange={audioControls.setVolume}
-        onToggleMute={audioControls.toggleMute}
-        onToggleRepeat={audioControls.toggleRepeat}
-        onToggleShuffle={audioControls.toggleShuffle}
-        onToggleLike={() => {
-          if (currentTrack) {
-            toggleTrackLike(currentTrack.id);
-          }
-        }}
-      />
+      {isNowPlayingOpen && (
+        <NowPlayingBar
+          track={currentTrack}
+          playerState={playerState}
+          isLiked={currentTrackLiked}
+          queueCount={playlistState.tracks.length}
+          onPlayPause={audioControls.togglePlayPause}
+          onNext={audioControls.nextTrack}
+          onPrevious={audioControls.previousTrack}
+          onSeek={audioControls.seek}
+          onVolumeChange={audioControls.setVolume}
+          onToggleMute={audioControls.toggleMute}
+          onToggleRepeat={audioControls.toggleRepeat}
+          onToggleShuffle={audioControls.toggleShuffle}
+          onToggleLike={() => {
+            if (currentTrack) {
+              toggleTrackLike(currentTrack.id);
+            }
+          }}
+          onClose={() => setIsNowPlayingOpen(false)}
+        />
+      )}
+
+      {!isNowPlayingOpen && currentTrack && (
+        <button
+          type="button"
+          onClick={() => setIsNowPlayingOpen(true)}
+          className="fixed bottom-4 right-4 z-[95] inline-flex items-center gap-2 rounded-full border border-cyan-100/25 bg-slate-950/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-cyan-100 shadow-lg shadow-slate-950/50 backdrop-blur-xl transition hover:border-cyan-300/50 hover:text-white"
+        >
+          <Music2 size={14} />
+          Now Playing
+        </button>
+      )}
     </div>
   );
 };

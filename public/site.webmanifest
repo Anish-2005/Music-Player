@@ -4,38 +4,44 @@
   "description": "Professional music player with advanced audio controls and stunning UI/UX design",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1a1a2e",
-  "theme_color": "#9333ea",
+  "background_color": "#06121a",
+  "theme_color": "#0f3146",
   "orientation": "portrait-primary",
   "categories": ["music", "entertainment", "multimedia"],
   "icons": [
     {
-      "src": "/icon-192x192.png",
-      "sizes": "192x192",
+      "src": "/mm-logo-themed.png",
+      "sizes": "958x958",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512x512.png",
-      "sizes": "512x512",
+      "src": "/mm-logo.svg",
+      "sizes": "958x958",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/mm-logo-themed.png",
+      "sizes": "958x958",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ],
   "screenshots": [
     {
-      "src": "/screenshot-mobile.jpg",
-      "sizes": "540x720",
-      "type": "image/jpeg",
+      "src": "/mm-logo-themed.png",
+      "sizes": "958x958",
+      "type": "image/png",
       "platform": "narrow",
-      "label": "Music Maniac on mobile"
+      "label": "Music Maniac logo"
     },
     {
-      "src": "/screenshot-desktop.jpg",
-      "sizes": "1920x1080",
-      "type": "image/jpeg",
+      "src": "/mm-logo-themed.png",
+      "sizes": "958x958",
+      "type": "image/png",
       "platform": "wide",
-      "label": "Music Maniac on desktop"
+      "label": "Music Maniac logo"
     }
   ],
   "shortcuts": [
@@ -44,14 +50,14 @@
       "short_name": "Play",
       "description": "Start playing music",
       "url": "/?action=play",
-      "icons": [{ "src": "/icon-play.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/mm-logo-themed.png", "sizes": "958x958" }]
     },
     {
       "name": "Library",
       "short_name": "Library",
       "description": "View your music library",
       "url": "/?view=library",
-      "icons": [{ "src": "/icon-library.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/mm-logo-themed.png", "sizes": "958x958" }]
     }
   ]
 }
