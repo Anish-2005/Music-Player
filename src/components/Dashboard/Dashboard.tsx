@@ -12,6 +12,7 @@ import { getStorageItem, setStorageItem } from '@/utils/helpers';
 type ViewId = 'home' | 'library' | 'playlists' | 'favorites' | 'recent';
 
 type ViewMode = 'grid' | 'list';
+type ThemeMode = 'dark' | 'light';
 
 interface UserPlaylist {
   id: string;
@@ -30,6 +31,7 @@ interface PlaylistEditorState {
 
 const STORAGE_KEYS = {
   viewMode: 'musicPlayer_viewMode',
+  themeMode: 'musicPlayer_themeMode',
   sidebarCollapsed: 'musicPlayer_sidebarCollapsed',
   likedTrackIds: 'musicPlayer_likedTrackIds',
   recentTrackIds: 'musicPlayer_recentTrackIds',
@@ -63,6 +65,8 @@ export const Dashboard: React.FC = () => {
   const [isNowPlayingOpen, setIsNowPlayingOpen] = useState(true);
   const [isCreatePlaylistModalOpen, setIsCreatePlaylistModalOpen] = useState(false);
   const [suggestedPlaylistName, setSuggestedPlaylistName] = useState('');
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => getStorageItem(STORAGE_KEYS.themeMode, 'dark'));
+  const [isThemeTransitioning, setIsThemeTransitioning] = useState(false);
   const [playlistEditor, setPlaylistEditor] = useState<PlaylistEditorState>({
     isOpen: false,
     playlistId: null,
@@ -318,6 +322,39 @@ export const Dashboard: React.FC = () => {
     [allEntries, currentTrack?.id, likedTrackIds, recentTrackIds]
   );
 
+  const handleToggleTheme = useCallback(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const applyThemeChange = () =>
+      setThemeMode((previousTheme) => (previousTheme === 'dark' ? 'light' : 'dark'));
+
+    if (prefersReducedMotion) {
+      applyThemeChange();
+      return;
+    }
+
+    const docWithTransition = document as Document & {
+      startViewTransition?: (callback: () => void) => { finished: Promise<void> };
+    };
+
+    setIsThemeTransitioning(true);
+
+    if (docWithTransition.startViewTransition) {
+      const transition = docWithTransition.startViewTransition(() => {
+        applyThemeChange();
+      });
+
+      transition.finished.finally(() => {
+        setIsThemeTransitioning(false);
+      });
+      return;
+    }
+
+    applyThemeChange();
+    window.setTimeout(() => {
+      setIsThemeTransitioning(false);
+    }, 420);
+  }, []);
+
   const selectedEditorPlaylist = useMemo(
     () => customPlaylists.find((playlist) => playlist.id === playlistEditor.playlistId) ?? null,
     [customPlaylists, playlistEditor.playlistId]
@@ -372,6 +409,18 @@ export const Dashboard: React.FC = () => {
   useEffect(() => {
     setStorageItem(STORAGE_KEYS.viewMode, viewMode);
   }, [viewMode]);
+
+  useEffect(() => {
+    setStorageItem(STORAGE_KEYS.themeMode, themeMode);
+    document.documentElement.setAttribute('data-theme', themeMode);
+  }, [themeMode]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('theme-transitioning', isThemeTransitioning);
+    return () => {
+      document.documentElement.classList.remove('theme-transitioning');
+    };
+  }, [isThemeTransitioning]);
 
   useEffect(() => {
     setStorageItem(STORAGE_KEYS.sidebarCollapsed, isSidebarCollapsed);
@@ -475,7 +524,9 @@ export const Dashboard: React.FC = () => {
           activeViewLabel={VIEW_LABELS[activeView]}
           trackCount={totalTracksInView}
           viewMode={viewMode}
+          themeMode={themeMode}
           onViewModeChange={setViewMode}
+          onToggleTheme={handleToggleTheme}
         />
 
         <HomeView
@@ -546,6 +597,8 @@ export const Dashboard: React.FC = () => {
         onClose={() => setPlaylistEditor((previous) => ({ ...previous, isOpen: false }))}
         onSubmit={handleSubmitPlaylistSongs}
       />
+
+      {isThemeTransitioning && <div className="theme-transition-overlay" aria-hidden="true" />}
     </div>
   );
 };

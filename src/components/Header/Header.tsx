@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Search, Menu, LayoutGrid, List } from 'lucide-react';
+import { Search, Menu, LayoutGrid, List, Sun, Moon } from 'lucide-react';
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -7,7 +7,9 @@ interface HeaderProps {
   activeViewLabel: string;
   trackCount: number;
   viewMode: 'grid' | 'list';
+  themeMode: 'light' | 'dark';
   onViewModeChange: (mode: 'grid' | 'list') => void;
+  onToggleTheme: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,7 +18,9 @@ export const Header: React.FC<HeaderProps> = ({
   activeViewLabel,
   trackCount,
   viewMode,
+  themeMode,
   onViewModeChange,
+  onToggleTheme,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -70,6 +74,16 @@ export const Header: React.FC<HeaderProps> = ({
         </label>
 
         <div className="ml-auto flex items-center gap-2 min-[360px]:gap-2.5 sm:gap-3">
+          <button
+            type="button"
+            onClick={onToggleTheme}
+            className="surface inline-flex h-8 w-8 items-center justify-center rounded-xl text-cyan-100/70 transition hover:text-white sm:h-10 sm:w-10"
+            aria-label={themeMode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={themeMode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {themeMode === 'dark' ? <Sun size={15} className="sm:h-4 sm:w-4" /> : <Moon size={15} className="sm:h-4 sm:w-4" />}
+          </button>
+
           <div className="surface inline-flex rounded-xl p-1" role="group" aria-label="Switch layout mode">
             <button
               type="button"
